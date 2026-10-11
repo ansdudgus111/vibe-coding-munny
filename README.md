@@ -34,9 +34,13 @@
 
 이 프로젝트는 **claude.ai 대화**(웹 채팅)로 개발했어요. 과제의 주 도구는 Claude Code인데, **이 저장소를 올리는 시점(2026-10-11)까지 Claude Code는 사용하지 않았어요.**
 
-이후 Claude Code를 사용하면 아래에 사용한 부분을 사실대로 추가해요.
+**2026-10-11부터 Claude Code를 사용했어요.** 사용한 부분을 사실대로 적어요.
 
-- Claude Code 사용 기록: (아직 없음)
+- Claude Code 사용 기록:
+  - git 저장소 초기화 및 그때까지의 claude.ai 결과물을 첫 커밋으로 스냅샷 (`863d877`)
+  - 과제 명세(hands-on-2026/vibe-coding-2026-template) 기준 Phase 0(나이브 베이스라인)을 재현 시도 — 서브에이전트가 격리 지시에도 프로젝트의 `CLAUDE.md`를 상속하는 것을 발견 (`1d960d1`)
+  - `CONTEXT.md`(claude.ai 대화 인수인계 문서) 편입 및 `REFLECTION.md` 초안 작성 (`4c71254`)
+  - 자세한 과정은 [REFLECTION.md](REFLECTION.md) 참고
 
 ## 로고
 
