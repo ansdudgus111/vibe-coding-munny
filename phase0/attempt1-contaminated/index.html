@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>천천히 — 할 일을 눈으로 보는 곳</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="brand">
+    <span class="mark" aria-hidden="true"></span>
+    <h1>천천히</h1>
+  </div>
+  <p class="today" id="todayLabel"></p>
+  <p class="coach" id="coachLine">오늘도 와줬네요.</p>
+</header>
+
+<main>
+
+  <!-- 1. 오늘의 진행 -->
+  <section class="card ring-card">
+    <div class="ring-wrap">
+      <svg class="ring" viewBox="0 0 160 160" role="img" aria-labelledby="ringDesc">
+        <title id="ringDesc">오늘의 목표 달성 정도</title>
+        <circle class="ring-bg" cx="80" cy="80" r="66"></circle>
+        <circle class="ring-fg" id="ringFg" cx="80" cy="80" r="66"></circle>
+      </svg>
+      <div class="ring-center">
+        <strong id="ringDone">0</strong>
+        <span id="ringGoal">/ 5</span>
+      </div>
+    </div>
+
+    <div class="goal-box">
+      <p class="goal-label">오늘의 목표</p>
+      <div class="goal-ctrl">
+        <button class="chip" id="goalMinus" aria-label="목표 줄이기">−</button>
+        <span id="goalValue">5</span>
+        <button class="chip" id="goalPlus" aria-label="목표 늘리기">+</button>
+      </div>
+      <p class="goal-hint">하루에 끝낼 <b>작은 단계</b>의 개수예요. 못 채워도 괜찮아요.</p>
+    </div>
+  </section>
+
+  <!-- 2. 할 일 -->
+  <section class="card">
+    <h2>할 일</h2>
+    <p class="sub">큰 일 하나를 작은 단계로 나눠 두세요. 칸이 하나씩 채워집니다.</p>
+
+    <form id="addForm" class="add-form" autocomplete="off">
+      <input id="addTitle" type="text" placeholder="예) 심리학 리포트" maxlength="40" required>
+      <label class="steps-label">
+        단계
+        <input id="addSteps" type="number" min="1" max="12" value="4">
+      </label>
+      <button type="submit" class="btn">담기</button>
+    </form>
+
+    <ul id="taskList" class="task-list"></ul>
+    <p id="emptyMsg" class="empty">아직 담은 일이 없어요. 하나만 올려볼까요?</p>
+  </section>
+
+  <!-- 3. 지난 기록 -->
+  <section class="card">
+    <h2>지난 7일</h2>
+    <p class="sub">빈 날이 있어도 괜찮아요. 쉬는 것도 기록이에요.</p>
+    <div id="history" class="history"></div>
+  </section>
+
+  <!-- 4. 알림 -->
+  <section class="card">
+    <h2>팝업 알림</h2>
+    <div class="row">
+      <label class="switch">
+        <input type="checkbox" id="notifyOn">
+        <span>알림 받기</span>
+      </label>
+      <select id="notifyEvery" aria-label="알림 주기">
+        <option value="15">15분마다</option>
+        <option value="30" selected>30분마다</option>
+        <option value="60">1시간마다</option>
+        <option value="120">2시간마다</option>
+      </select>
+    </div>
+    <p class="note" id="permNote"></p>
+    <p class="note">
+      이 알림은 <b>이 탭이 열려 있는 동안에만</b> 옵니다. 탭을 닫으면 오지 않아요.
+      앱을 쓰고 있는 중에는 방해하지 않습니다.
+    </p>
+    <button class="btn ghost" id="testNotify">알림 미리 보기</button>
+  </section>
+
+</main>
+
+<button class="breathe-fab" id="breatheBtn">숨 고르기</button>
+
+<div class="modal" id="breatheModal" hidden>
+  <div class="modal-inner">
+    <div class="breathe-circle" id="breatheCircle"></div>
+    <p class="breathe-text" id="breatheText">준비</p>
+    <p class="breathe-sub">4초 들이쉬고 · 4초 멈추고 · 6초 내쉬기</p>
+    <button class="btn ghost" id="breatheClose">그만하기</button>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
