@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Starmp</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='16'%20fill='%23FFFDF8'/%3E%3Cpath%20d='M29.5%2015.1Q32%2011%2034.5%2015.1L36.8%2018.9Q39.2%2023%2043.9%2024.1L48.3%2025.1Q52.9%2026.2%2049.8%2029.8L46.8%2033.2Q43.7%2036.8%2044.1%2041.6L44.5%2046Q44.9%2050.8%2040.5%2048.9L36.4%2047.2Q32%2045.3%2027.6%2047.2L23.5%2048.9Q19.1%2050.8%2019.5%2046L19.9%2041.6Q20.3%2036.8%2017.2%2033.2L14.2%2029.8Q11.1%2026.2%2015.7%2025.1L20.1%2024.1Q24.8%2023%2027.2%2018.9Z'%20fill='%23F7E3A1'%20stroke='%234A4A55'%20stroke-width='3'%20stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#FFFDF8;--pink:#F6C9D6;--sky:#BFD3EE;--green:#CFE3B0;--butter:#F7E3A1;--ink:#4A4A55;--sub:#666673}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Gowun Dodum","Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:var(--ink);background-color:var(--paper);
+ background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='200'%20height='200'%3E%3Cfilter%20id='n'%20x='0'%20y='0'%20width='100%25'%20height='100%25'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='.75'%20numOctaves='2'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20values='0%200%200%200%20.42%200%200%200%200%20.38%200%200%200%200%20.33%200%200%200%20.16%200'/%3E%3C/filter%3E%3Crect%20width='200'%20height='200'%20filter='url%28%23n%29'/%3E%3C/svg%3E"),radial-gradient(circle at 12% 18%,#d9d6cf 1px,transparent 1.5px),radial-gradient(circle at 70% 40%,#d9d6cf 1px,transparent 1.5px),radial-gradient(circle at 38% 82%,#cfcbc2 1.2px,transparent 1.7px);
+ background-size:200px 200px,90px 90px,130px 130px,110px 110px;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:24px 16px 72px}
+h1{font-size:24px;margin:8px 0 4px;font-weight:400;display:flex;align-items:center;gap:8px}
+#logo{display:inline-flex;flex:none}
+.wm{display:block;width:min(176px,calc(100vw - 96px));height:auto}
+.tag{color:var(--sub);font-size:14px;margin:0 0 24px}
+.panel{border:1.5px solid var(--ink);border-radius:16px 14px 18px 13px;background:rgba(255,255,255,.7);padding:16px;margin-bottom:16px;outline:1px dashed rgba(74,74,85,.22);outline-offset:-6px}
+.panel.pink{background:rgba(246,201,214,.35)}
+.panel.sky{background:rgba(191,211,238,.35)}
+.panel.green{background:rgba(207,227,176,.4)}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);padding:10px 12px;border:1.5px solid var(--ink);border-radius:10px 12px 9px 11px;background:#fffefb;margin-bottom:8px}
+input:focus,textarea:focus,select:focus,button:focus-visible,summary:focus-visible{outline:3px solid var(--sky);outline-offset:1px}
+label{font-size:14px;display:block;margin:8px 0 4px}
+.ptitle{margin-bottom:4px}
+.btn{font:inherit;color:var(--ink);background:var(--butter);border:1.5px solid var(--ink);border-radius:12px 10px 13px 9px;padding:10px 16px;cursor:pointer}
+.btn.ghost{background:transparent}
+.btn.full{width:100%}
+.btn:disabled{opacity:.55;cursor:wait}
+.btn:active{transform:translateY(1px)}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.item{display:flex;gap:10px;align-items:center;cursor:pointer;padding:12px;border:1.5px solid var(--ink);border-radius:13px 11px 14px 10px;background:rgba(255,255,255,.75);margin-bottom:12px;width:100%;font:inherit;color:inherit;text-align:left}
+.item small{color:var(--sub);display:block}
+.mini{display:flex;gap:2px;flex-wrap:wrap;max-width:70px;justify-content:flex-end}
+.dd{font-size:13px;color:var(--sub);white-space:nowrap}
+.seg{display:flex;gap:4px}
+.seg button{font:inherit;font-size:14px;color:var(--ink);background:transparent;border:1.5px solid var(--ink);border-radius:10px 9px 11px 8px;padding:4px 12px;cursor:pointer}
+.seg button.on{background:var(--butter)}
+.rnav{display:flex;align-items:center;justify-content:center;gap:16px;margin:12px 0 8px}
+.rnav button{font:inherit;background:none;border:0;cursor:pointer;color:var(--ink);font-size:16px;padding:2px 8px}
+.rsum{text-align:center;font-size:16px;margin:8px 0 16px}
+.rh{font-size:14px;color:var(--sub);margin:16px 0 8px}
+.item.ritem{margin-bottom:8px;padding:10px 12px}
+.item.open{background:rgba(247,227,161,.35)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:8px 0 4px}
+.cal-h{text-align:center;font-size:13px;color:var(--sub);padding:4px 0}
+.cal-day{font:inherit;color:var(--ink);background:rgba(255,255,255,.7);border:1.5px solid transparent;border-radius:10px 9px 11px 8px;min-height:56px;padding:4px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.cal-day .n{font-size:13px;line-height:1}
+.cal-day .stars{display:flex;flex-wrap:wrap;justify-content:center;gap:1px;max-width:100%}
+.cal-day .more{font-size:10px;color:var(--sub);line-height:9px}
+.cal-day .due{width:8px;height:8px;border:1.5px solid var(--ink);border-radius:50%;margin-top:auto}
+.cal-day .due.ok{background:#8fb872}
+.cal-day.full{background:rgba(207,227,176,.6)}
+.cal-day.today{border-color:var(--ink)}
+.cal-day.sel{background:rgba(246,201,214,.6);border-color:var(--ink)}
+.cal-detail{margin:8px 0 4px;padding:12px;border:1.5px dashed var(--ink);border-radius:12px 10px 13px 9px;background:rgba(255,255,255,.6)}
+.cal-detail .rh{margin:12px 0 8px}
+.swatches{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 8px}
+.sw{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--ink);padding:0;cursor:pointer}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--paper),0 0 0 4.5px var(--ink)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;border:1px solid var(--ink);margin-right:8px;vertical-align:middle}
+.dl{margin:0;padding-left:18px;font-size:15px;line-height:1.7}
+.item.fin{background:rgba(207,227,176,.35)}
+.pct{text-align:center;font-size:22px;margin:4px 0 8px}
+.coach,.hint,.rsum,.toast{word-break:keep-all;overflow-wrap:break-word}
+.coach{text-align:center;line-height:1.7;font-size:17px;min-height:56px;padding:8px}
+.stage{position:relative;width:min(300px,86vw);aspect-ratio:240/320;margin:0 auto}
+.layer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:block}
+.sheep{transform-box:fill-box;transform-origin:50% 100%}
+.sheep.hop{animation:hop .55s ease}
+@keyframes hop{0%,100%{transform:translateY(0) scaleY(1)}30%{transform:translateY(-9px) scaleY(1.05)}60%{transform:translateY(0) scaleY(.94)}}
+.tw{animation:tw 3.4s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.25}50%{opacity:1}}
+.steps label.step{display:flex;gap:10px;align-items:center;font-size:16px;padding:12px 4px;border-bottom:1px dashed #cfcbc2;cursor:pointer;margin:0}
+.steps label.step:last-child{border-bottom:0}
+.step input{width:22px;height:22px;margin:0;accent-color:#e59ab0;flex:none;padding:0}
+.step.done span{text-decoration:line-through;color:var(--sub)}
+.back{background:none;border:0;font:inherit;color:var(--sub);cursor:pointer;padding:4px 0;margin-bottom:8px}
+.toast{position:fixed;left:50%;top:16px;transform:translate(-50%,-220%);visibility:hidden;background:var(--pink);border:1.5px solid var(--ink);border-radius:14px;padding:10px 16px;font-size:15px;transition:transform .4s ease,visibility .4s;z-index:30;max-width:92vw;text-align:center}
+.toast.on{transform:translate(-50%,0);visibility:visible}
+.empty{text-align:center;color:var(--sub);padding:24px 0}
+.hint{font-size:13px;color:var(--sub);text-align:center;margin:12px 0 0;line-height:1.6}
+#list .hint{margin:16px 0 12px}
+.hint.l{text-align:left;margin:4px 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 4px}
+.chip{font:inherit;font-size:14px;color:var(--ink);background:#fffefb;border:1.5px dashed var(--ink);border-radius:12px 10px 13px 9px;padding:6px 12px;cursor:pointer}
+.chip:hover,.chip.on{background:var(--butter);border-style:solid}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:20}
+@media (prefers-reduced-motion:reduce){.tw,.sheep.hop{animation:none}.toast{transition:none}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<!-- 공유 SVG 정의 (필터, 패턴, 그라디언트) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="paint" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G" result="wob"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="g"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  1.5 0 0 0 -0.74" result="speck"/>
+      <feComposite in="speck" in2="wob" operator="in" result="speckIn"/>
+      <feMerge><feMergeNode in="wob"/><feMergeNode in="speckIn"/></feMerge>
+    </filter>
+    <pattern id="plaid" width="9" height="9" patternUnits="userSpaceOnUse">
+      <rect width="9" height="9" fill="#EAF3D8"/>
+      <rect width="9" height="3" y="3" fill="#C9E0A6" opacity=".75"/>
+      <rect width="3" height="9" x="3" fill="#C9E0A6" opacity=".75"/>
+    </pattern>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#cfe0f3" stop-opacity=".45"/>
+    </linearGradient>
+    <radialGradient id="petal" cx=".4" cy=".35" r=".8">
+      <stop offset="0" stop-color="#fdeaf0"/><stop offset="1" stop-color="#f3b9cb"/>
+    </radialGradient>
+    <radialGradient id="petalB" cx=".4" cy=".35" r=".8">
+      <stop offset="0" stop-color="#e6effa"/><stop offset="1" stop-color="#aac5e8"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<div class="wrap">
+  <h1 class="brand"><span id="logo" aria-hidden="true"></span><svg class="wm" viewBox="-230 -735 2950 1010" role="img" aria-label="Starmp"><path d="M219 50Q122 50 55 4Q-20 -49 -20 -141Q-20 -211 34 -263Q89 -316 157 -316Q201 -316 232.5 -289.5Q264 -263 264 -218Q264 -202 247 -202Q236 -202 230 -222Q221 -251 212 -260Q196 -281 159 -281Q103 -281 58 -239Q14 -197 14 -142Q14 -66 77 -22Q133 16 216 16Q272 16 320.5 2.5Q369 -11 410 -39Q499 -101 499 -196Q499 -293 406 -339L235 -402Q143 -443 143 -528Q143 -611 218 -660Q283 -702 368 -702Q433 -702 478 -669Q529 -632 529 -567Q529 -526 498 -498Q469 -470 427 -470Q402 -470 385 -485Q368 -500 368 -525Q368 -542 385 -542Q397 -542 403 -519Q407 -503 428 -503Q451 -503 472.5 -521.5Q494 -540 494 -567Q494 -618 454 -645Q419 -668 364 -668Q296 -668 240 -633Q177 -593 177 -531Q177 -460 269 -424L441 -358Q533 -305 533 -197Q533 -85 435 -14Q346 50 219 50ZM623 13Q546 13 546 -111Q546 -215 591 -366H559Q543 -366 543 -383Q543 -400 559 -400H602Q615 -439 629 -473Q643 -507 658 -535Q703 -622 746 -622Q780 -622 780 -568Q780 -539 770 -506Q763 -483 754 -456.5Q745 -430 733 -400H782Q799 -400 799 -383Q799 -366 782 -366H717Q666 -252 582 -138Q581 -130 581 -122.5Q581 -115 581 -108Q581 -19 631 -19Q670 -19 700.5 -47Q731 -75 756 -117Q766 -134 773 -140Q780 -146 784 -146Q796 -146 796 -131Q796 -129 793.5 -121.5Q791 -114 789 -112Q760 -57 718 -22Q676 13 623 13ZM639 -400H694Q710 -435 720.5 -462Q731 -489 737 -508Q745 -538 745 -558Q745 -580 736 -580Q720 -580 691 -526Q678 -501 665 -469.5Q652 -438 639 -400ZM590 -204Q613 -242 635 -282.5Q657 -323 678 -366H628Q615 -326 605.5 -285.5Q596 -245 590 -204ZM1104 7Q1067 7 1042 -15.5Q1017 -38 1021 -81Q960 6 874 6Q819 6 792 -37Q770 -71 770 -129Q770 -140 771 -151.5Q772 -163 774 -174Q781 -214 801 -251.5Q821 -289 853 -326Q925 -407 1002 -407Q1043 -407 1070 -383.5Q1097 -360 1097 -318Q1097 -301 1088 -285Q1109 -284 1105 -266L1073 -175Q1057 -130 1057 -93Q1057 -59 1071.5 -40Q1086 -21 1111 -21Q1125 -21 1142 -29Q1159 -37 1181 -56Q1196 -69 1209.5 -85Q1223 -101 1233 -117Q1239 -126 1246 -134.5Q1253 -143 1260 -143Q1272 -143 1272 -130Q1272 -125 1270.5 -120.5Q1269 -116 1267 -114Q1254 -93 1238 -73Q1222 -53 1204 -36Q1180 -14 1154 -3.5Q1128 7 1104 7ZM804 -124Q804 -28 878 -28Q941 -28 987 -88Q1001 -107 1016 -136Q1031 -165 1045 -204Q1049 -214 1053.5 -227.5Q1058 -241 1065 -258Q1045 -243 1024 -243Q988 -243 988 -263Q988 -280 1005 -280Q1008 -280 1013.5 -278.5Q1019 -277 1022 -277Q1037 -277 1050 -290Q1063 -303 1063 -318Q1063 -373 1001 -373Q939 -373 877 -301Q818 -235 808 -168Q806 -157 805 -146Q804 -135 804 -124ZM1501 10Q1468 10 1446.5 -14.5Q1425 -39 1425 -85Q1425 -169 1496 -300Q1466 -289 1442 -289Q1393 -289 1356 -329Q1350 -296 1334.5 -256.5Q1319 -217 1301 -179.5Q1283 -142 1267 -114Q1263 -106 1257 -104Q1251 -102 1248 -102Q1233 -102 1233 -117Q1253 -149 1273 -191.5Q1293 -234 1310.5 -281Q1328 -328 1337 -372Q1331 -396 1331 -426Q1331 -475 1353 -475Q1377 -475 1377 -426Q1377 -415 1375.5 -401Q1374 -387 1372 -371Q1376 -350 1397.5 -337Q1419 -324 1443 -324Q1477 -324 1530 -359Q1541 -367 1543 -367Q1562 -367 1562 -349Q1562 -347 1561.5 -345Q1561 -343 1560 -341Q1535 -298 1515 -258.5Q1495 -219 1480 -181Q1460 -130 1460 -88Q1460 -24 1502 -24Q1535 -24 1562.5 -53.5Q1590 -83 1612 -117Q1617 -125 1626.5 -138Q1636 -151 1643 -151Q1648 -151 1650.5 -149Q1653 -147 1653 -139Q1653 -134 1650.5 -125Q1648 -116 1646 -114Q1619 -65 1584.5 -27.5Q1550 10 1501 10ZM2096 9Q2019 9 2019 -65Q2019 -112 2068 -244Q2090 -304 2090 -324Q2090 -365 2058 -365Q2023 -365 1990 -331Q1935 -276 1903 -216Q1885 -181 1859 -116Q1845 -79 1834 -53.5Q1823 -28 1816 -12Q1811 -4 1804 -4Q1796 -4 1788.5 -9.5Q1781 -15 1781 -21Q1781 -27 1796 -60Q1872 -236 1872 -303Q1872 -356 1836 -356Q1796 -356 1757 -311Q1702 -250 1670 -168Q1657 -128 1643.5 -89Q1630 -50 1617 -10Q1613 0 1604 0Q1584 0 1584 -19L1641 -200Q1674 -307 1674 -386Q1674 -403 1692 -403Q1708 -403 1708 -381Q1708 -362 1706 -340.5Q1704 -319 1700 -296Q1709 -309 1717.5 -320Q1726 -331 1734 -339Q1788 -393 1844 -393Q1909 -393 1909 -301V-288Q1926 -314 1943.5 -333.5Q1961 -353 1980 -366Q2030 -402 2067 -402Q2127 -402 2127 -325Q2127 -302 2103 -237Q2086 -191 2070 -144Q2054 -97 2054 -70Q2054 -26 2095 -26Q2131 -26 2166.5 -54.5Q2202 -83 2225 -117Q2227 -121 2235 -131.5Q2243 -142 2248 -142Q2265 -142 2265 -128Q2265 -126 2263 -121Q2261 -116 2259 -114Q2244 -83 2216 -54.5Q2188 -26 2156.5 -8.5Q2125 9 2096 9ZM2156 246Q2118 246 2118 195Q2118 147 2152 58Q2163 29 2187 -25Q2211 -79 2249 -159Q2263 -186 2276.5 -215.5Q2290 -245 2295 -274Q2316 -390 2338 -423Q2348 -439 2360 -439Q2368 -439 2373 -433Q2378 -427 2378 -419Q2378 -407 2365 -407Q2361 -407 2349 -361Q2347 -353 2344 -343Q2341 -333 2339 -322Q2395 -387 2466 -387Q2527 -387 2561 -342Q2592 -302 2592 -239Q2592 -144 2515 -62Q2439 19 2343 19Q2298 19 2281 -1Q2232 246 2156 246ZM2336 -14Q2421 -14 2488 -84Q2557 -155 2557 -238Q2557 -287 2536 -318Q2512 -353 2467 -353Q2422 -353 2381 -316Q2361 -297 2346 -276.5Q2331 -256 2323 -233Q2323 -233 2312 -173Q2307 -140 2301.5 -106.5Q2296 -73 2289 -39H2290Q2301 -39 2308 -24Q2312 -14 2336 -14ZM2160 213Q2169 213 2184 189Q2202 160 2217 116Q2244 34 2268 -119Q2237 -49 2213.5 6.5Q2190 62 2175 104Q2155 160 2154 190Q2154 213 2160 213Z" fill="#4A4A55"/><path d="M-14 -120 L-17.4 -125.2 L-21.1 -130 L-25.1 -134.6 L-29.4 -138.9 L-33.9 -142.9 L-38.7 -146.6 L-43.7 -149.9 L-48.8 -152.8 L-54.2 -155.4 L-59.6 -157.5 L-65.2 -159.3 L-70.8 -160.8 L-76.5 -161.8 L-82.2 -162.4 L-87.9 -162.7 L-93.6 -162.6 L-99.2 -162 L-104.7 -161.2 L-110.1 -159.9 L-115.4 -158.3 L-120.6 -156.4 L-125.6 -154.1 L-130.4 -151.5 L-134.9 -148.6 L-139.3 -145.4 L-143.4 -142 L-147.2 -138.3 L-150.7 -134.4 L-154 -130.3 L-157 -126 L-159.6 -121.5 L-161.9 -116.9 L-163.9 -112.2 L-165.5 -107.4 L-166.9 -102.5 L-167.8 -97.6 L-168.5 -92.7 L-168.8 -87.7 L-168.7 -82.8 L-168.4 -78 L-167.7 -73.2 L-166.7 -68.4 L-165.4 -63.8 L-163.7 -59.4 L-161.8 -55 L-159.7 -50.9 L-157.2 -46.9 L-154.6 -43.2 L-151.7 -39.6 L-148.6 -36.3 L-145.3 -33.2 L-141.8 -30.4 L-138.1 -27.8 L-134.4 -25.5 L-130.5 -23.5 L-126.5 -21.7 L-122.4 -20.3 L-118.3 -19.1 L-114.1 -18.2 L-109.9 -17.6 L-105.7 -17.3 L-101.6 -17.3 L-97.4 -17.6 L-93.4 -18.1 L-89.4 -18.9 L-85.5 -20 L-81.7 -21.3 L-78.1 -22.9 L-74.6 -24.7 L-71.3 -26.7 L-68.1 -28.9 L-65.1 -31.3 L-62.3 -33.9 L-59.7 -36.6 L-57.3 -39.5 L-55.2 -42.5 L-53.2 -45.6 L-51.6 -48.8 L-50.1 -52.1 L-48.9 -55.5 L-47.9 -58.9 L-47.2 -62.3 L-46.7 -65.7 L-46.4 -69.2 L-46.4 -72.6 L-46.6 -75.9 L-47 -79.3 L-47.7 -82.5 L-48.5 -85.7 L-49.6 -88.7 L-50.9 -91.7 L-52.3 -94.5 L-54 -97.2 L-55.7 -99.8 L-57.7 -102.2 L-59.7 -104.4 L-61.9 -106.5 L-64.2 -108.3 L-66.7 -110 L-69.1 -111.6 L-71.7 -112.9 L-74.3 -114 L-77 -115 L-79.7 -115.7 L-82.4 -116.3 L-85.1 -116.6 L-87.7 -116.8 L-90.4 -116.8 L-93 -116.6 L-95.6 -116.2 L-98.1 -115.7 L-100.5 -115 L-102.9 -114.1 L-105.1 -113.1 L-107.2 -111.9 L-109.3 -110.7 L-111.2 -109.3 L-113 -107.8 L-114.6 -106.2 L-116.1 -104.5 L-117.5 -102.7 L-118.7 -100.9 L-119.8 -99 L-120.7 -97 L-121.5 -95.1 L-122.1 -93.1 L-122.6 -91.1 L-122.9 -89.1 L-123.1 -87.2 L-123.1 -85.2 L-123 -83.3 L-122.8 -81.4 L-122.5 -79.6 L-122 -77.9 L-121.4 -76.2 L-120.7 -74.6 L-119.9 -73 L-119 -71.6 L-118 -70.3 L-117 -69 L-115.9 -67.9 L-114.7 -66.8 L-113.5 -65.9 L-112.2 -65.1 L-110.9 -64.4 L-109.6 -63.8 L-108.3 -63.3 L-107 -62.9 L-105.6 -62.6 L-104.3 -62.5" fill="none" stroke="#4A4A55" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/><path d="M2366 -424 L2368 -430.5 L2369.5 -437.2 L2370.6 -443.8 L2371.1 -450.5 L2371.2 -457.2 L2370.8 -463.9 L2370 -470.4 L2368.6 -476.9 L2366.9 -483.2 L2364.7 -489.3 L2362 -495.2 L2359 -500.9 L2355.6 -506.3 L2351.8 -511.4 L2347.7 -516.2 L2343.3 -520.7 L2338.7 -524.8 L2333.7 -528.6 L2328.6 -532 L2323.2 -535 L2317.7 -537.5 L2312 -539.7 L2306.2 -541.4 L2300.4 -542.7 L2294.5 -543.6 L2288.6 -544.1 L2282.7 -544.1 L2276.9 -543.7 L2271.2 -542.9 L2265.5 -541.7 L2260 -540.1 L2254.7 -538.1 L2249.5 -535.8 L2244.6 -533.1 L2239.9 -530.1 L2235.4 -526.8 L2231.3 -523.2 L2227.4 -519.3 L2223.8 -515.2 L2220.6 -510.9 L2217.7 -506.4 L2215.2 -501.7 L2213 -496.9 L2211.2 -492 L2209.7 -487 L2208.6 -481.9 L2207.9 -476.8 L2207.6 -471.7 L2207.6 -466.7 L2208 -461.7 L2208.7 -456.7 L2209.8 -451.9 L2211.2 -447.2 L2212.9 -442.6 L2215 -438.2 L2217.3 -434 L2220 -430 L2222.8 -426.3 L2225.9 -422.8 L2229.3 -419.5 L2232.8 -416.5 L2236.5 -413.8 L2240.4 -411.4 L2244.4 -409.3 L2248.5 -407.5 L2252.7 -406 L2256.9 -404.9 L2261.2 -404 L2265.5 -403.5 L2269.8 -403.2 L2274 -403.3 L2278.2 -403.7 L2282.4 -404.4 L2286.4 -405.4 L2290.3 -406.6 L2294.1 -408.1 L2297.7 -409.9 L2301.2 -411.9 L2304.4 -414.2 L2307.5 -416.6 L2310.4 -419.2 L2313 -422 L2315.4 -425 L2317.6 -428.1 L2319.5 -431.3 L2321.2 -434.6 L2322.6 -438 L2323.7 -441.5 L2324.6 -445 L2325.2 -448.5 L2325.5 -452 L2325.6 -455.5 L2325.5 -458.9 L2325.1 -462.3 L2324.4 -465.6 L2323.6 -468.8 L2322.5 -472 L2321.2 -475 L2319.7 -477.8 L2318 -480.5 L2316.1 -483.1 L2314.1 -485.5 L2312 -487.7 L2309.7 -489.7 L2307.3 -491.5 L2304.8 -493.1 L2302.2 -494.5 L2299.6 -495.7 L2296.9 -496.7 L2294.2 -497.5 L2291.4 -498.1 L2288.7 -498.5 L2286 -498.6 L2283.3 -498.6 L2280.7 -498.4 L2278.1 -498 L2275.6 -497.4 L2273.2 -496.6 L2270.9 -495.6 L2268.6 -494.6 L2266.5 -493.3 L2264.6 -492 L2262.8 -490.5 L2261.1 -488.9 L2259.5 -487.2 L2258.1 -485.4 L2256.9 -483.6 L2255.8 -481.7 L2254.9 -479.8 L2254.2 -477.8 L2253.6 -475.8 L2253.2 -473.8 L2252.9 -471.8 L2252.8 -469.9 L2252.8 -467.9 L2253 -466.1 L2253.3 -464.2 L2253.7 -462.5 L2254.3 -460.8 L2255 -459.2 L2255.8 -457.6 L2256.6 -456.2 L2257.6 -454.9 L2258.7 -453.7 L2259.8 -452.6 L2261 -451.6 L2262.2 -450.7 L2263.4 -450 L2264.7 -449.3 L2266 -448.8" fill="none" stroke="#4A4A55" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/><circle cx="1850" cy="-545" r="104" fill="none" stroke="#4A4A55" stroke-width="9" stroke-dasharray="6 22" stroke-linecap="round"/><path d="M1842.6 -598.7Q1850 -611 1857.4 -598.7L1864.3 -587.2Q1871.7 -574.9 1885.7 -571.7L1898.8 -568.6Q1912.8 -565.4 1903.4 -554.6L1894.5 -544.4Q1885.2 -533.6 1886.4 -519.3L1887.6 -505.9Q1888.8 -491.6 1875.6 -497.2L1863.2 -502.5Q1850 -508 1836.8 -502.5L1824.4 -497.2Q1811.2 -491.6 1812.4 -505.9L1813.6 -519.3Q1814.8 -533.6 1805.5 -544.4L1796.6 -554.6Q1787.2 -565.4 1801.2 -568.6L1814.3 -571.7Q1828.3 -574.9 1835.7 -587.2Z" fill="#F7E3A1" stroke="#4A4A55" stroke-width="14" stroke-linejoin="round"/><path d="M2640 -460Q2640 -430 2670 -430Q2640 -430 2640 -400Q2640 -430 2610 -430Q2640 -430 2640 -460Z" fill="#F6C9D6" stroke="#4A4A55" stroke-width="8" stroke-linejoin="round"/><path d="M1560 -672Q1560 -650 1582 -650Q1560 -650 1560 -628Q1560 -650 1538 -650Q1560 -650 1560 -672Z" fill="#BFD3EE" stroke="#4A4A55" stroke-width="8" stroke-linejoin="round"/></svg></h1>
+  <p class="tag">과제를 쪼개서, 별을 하나씩 모아요</p>
+
+  <!-- 화면 1: 과제 등록 + 목록 -->
+  <section id="s1">
+    <div id="list"></div>
+
+
+        <div class="panel pink" id="formBox">
+      <div class="ptitle">새 과제 담기</div>
+      <label for="fTitle">과제 이름</label>
+      <input id="fTitle" placeholder="예) 경제학 기말 리포트" maxlength="40">
+      <label for="fDue">마감일</label>
+      <input id="fDue" type="date">
+      <label>할 일 단계 (3~5개)</label>
+      <div class="chips" id="tpl" role="group" aria-label="과제 유형으로 단계 초안 채우기"></div>
+      <p class="hint l" id="tplHint">유형을 누르면 단계 초안이 채워져요. 직접 적어도 돼요.</p>
+      <div id="fSteps"></div>
+      <label>프로젝트 색</label>
+      <div class="swatches" id="fColor" role="group" aria-label="프로젝트 색"></div>
+      <p class="hint l" id="fColorHint">별사탕이 이 색 계열로 만들어져요.</p>
+      <label for="fRem">알림 (선택)</label>
+      <select id="fRem"></select>
+      <input id="fRemTime" type="time" value="20:00" aria-label="알림 시각" hidden>
+      <p class="hint l">알림은 이 탭이 열려 있는 동안에만 와요.</p>
+      <div class="row" style="margin-top:8px">
+        <button class="btn ghost" id="addStep" type="button">+ 단계</button>
+        <button class="btn" id="save" type="button">병에 담기</button>
+      </div>
+      <p class="hint" id="err" role="alert"></p>
+    </div>
+
+    <div class="panel sky" id="review"></div>
+  </section>
+
+  <!-- 화면 2: 병 -->
+  <section id="s2" hidden>
+    <button class="back" id="back">← 목록으로</button>
+    <div class="panel sky">
+      <div class="row"><strong id="jTitle"></strong><span class="dd" id="jDue"></span></div>
+      <div id="jar"></div>
+      <div class="pct" id="pct" aria-live="polite"></div>
+      <div class="coach" id="coach" aria-live="polite"></div>
+    </div>
+    <div class="panel steps" id="jSteps"></div>
+    <div class="panel">
+      <label for="jRem" style="margin-top:0">이 과제 알림</label>
+      <select id="jRem"></select>
+      <input id="jRemTime" type="time" value="20:00" aria-label="알림 시각" hidden>
+      <label>프로젝트 색</label>
+      <div class="swatches" id="jColor" role="group" aria-label="프로젝트 색"></div>
+    </div>
+    <button class="btn ghost full" id="del" type="button">이 과제 지우기</button>
+  </section>
+
+  <!-- 화면 3: 완료 -->
+  <section id="s3" hidden>
+    <div class="panel green">
+      <div id="fullJar"></div>
+      <div class="coach" id="doneMsg"></div>
+      <label for="refl">오늘의 한 줄 (선택)</label>
+      <textarea id="refl" rows="2" maxlength="120" placeholder="이번 과제, 어땠나요?"></textarea>
+      <button class="btn full" id="finish" type="button">병 뚜껑 닫기</button>
+    </div>
+  </section>
+</div>
+
+<script>
+const KEY="star-jar-v1";
+/* 프로젝트 색: 색마다 같은 계열의 별사탕 팔레트가 만들어져요 (믹스는 예전 알록달록한 별사탕) */
+const PRESETS=[{k:"pink",n:"핑크",h:340},{k:"peach",n:"복숭아",h:18},{k:"butter",n:"버터",h:46},{k:"lime",n:"연두",h:95},{k:"mint",n:"민트",h:160},{k:"sky",n:"하늘",h:208},{k:"lav",n:"라벤더",h:265}];
+const DATA_VERSION=2; // 저장 구조를 바꿀 때 올리고, migrateState에서 옛 데이터를 변환해요
+let state={version:DATA_VERSION,tasks:[],lastOpened:null,settings:{mute:false}};
+function normalizeTask(t){
+  const steps=(Array.isArray(t.steps)?t.steps:[]).slice(0,5).map(x=>({text:String((x&&x.text)||"").slice(0,60),done:!!(x&&x.done),doneAt:(x&&x.doneAt)||null}));
+  return{id:String(t.id||("t"+Math.random().toString(36).slice(2,9))),title:String(t.title||"").slice(0,40),due:String(t.due||""),steps,
+    createdAt:t.createdAt||new Date().toISOString(),completedAt:t.completedAt||null,reflection:String(t.reflection||"").slice(0,120),remind:cleanRem(t.remind),color:(PRESETS.some(p=>p.k===t.color)?t.color:"mix")};
+}
+function migrateState(d){
+  d=d&&typeof d==="object"?d:{};
+  return{version:DATA_VERSION,lastOpened:d.lastOpened||null,settings:{mute:false},
+    tasks:(Array.isArray(d.tasks)?d.tasks:[]).filter(t=>t&&/^\d{4}-\d{2}-\d{2}$/.test(t.due||"")&&Array.isArray(t.steps)&&t.steps.length).map(normalizeTask)};
+}
+try{const s=localStorage.getItem(KEY);if(s)state=migrateState(JSON.parse(s))}catch(e){}
+const save=()=>{state.version=DATA_VERSION;try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const midnight=d=>{const x=new Date(d);x.setHours(0,0,0,0);return x};
+const dDiff=ds=>Math.round((midnight(ds+"T00:00:00")-midnight(new Date()))/86400000);
+const ddText=n=>n===0?"오늘까지":n>0?`${n}일 남았어요`:`${Math.abs(n)}일 지났어요`;
+
+const COLORS=["#F7E3A1","#F6C9D6","#BFD3EE","#CFE3B0","#F9D5B8"];
+const LIGHT=["#FDF4CF","#FCE6EE","#E0EBF8","#E8F2D6","#FCEADB"];
+const DARK=["#EBCB72","#EBA9BD","#94B4DE","#AECF89","#EFB890"];
+const INK="#4A4A55";
+const MIX={fill:COLORS,light:LIGHT,dark:DARK};
+const hsl=(h,s,l)=>{h=((h%360)+360)%360;s/=100;l/=100;const a=s*Math.min(l,1-l),f=n=>{const k=(n+h/30)%12;return l-a*Math.max(-1,Math.min(k-3,9-k,1))};return"#"+[f(0),f(8),f(4)].map(x=>Math.round(x*255).toString(16).padStart(2,"0")).join("")};
+// 비슷한 색(색상 ±22°, ±44°)과 밝기 차이로 한 색 계열의 별사탕 5종을 만들어요
+const HUE_OFF=[0,-22,22,-44,44],LIGHTNESS=[80,86,77,84,81],palCache={};
+function paletteFor(t){
+  const k=(t&&t.color)||"mix";
+  if(k==="mix")return MIX;
+  if(palCache[k])return palCache[k];
+  const pr=PRESETS.find(p=>p.k===k);if(!pr)return MIX;
+  return palCache[k]={fill:HUE_OFF.map((o,i)=>hsl(pr.h+o,72,LIGHTNESS[i])),light:HUE_OFF.map((o,i)=>hsl(pr.h+o,80,LIGHTNESS[i]+11)),dark:HUE_OFF.map((o,i)=>hsl(pr.h+o,58,LIGHTNESS[i]-13))};
+}
+function swatchBg(k){
+  if(k==="mix")return`conic-gradient(${COLORS.map((c,i)=>`${c} ${i*20}% ${(i+1)*20}%`).join(",")})`;
+  const p=PRESETS.find(x=>x.k===k);return p?hsl(p.h,72,80):"#ddd";
+}
+const TOTAL=40;
+let current=null,jarScene=null,doneScene=null;
+
+/* 둥글게 다듬은 별: 꼭짓점을 곡선으로 깎아 통통하고 부드러운 별을 만들어요 */
+function starVerts(cx,cy,R,inner,jit){const v=[];for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=(i%2?R*inner:R)*(1+(jit?jit[i]:0));v.push([cx+rr*Math.cos(a),cy+rr*Math.sin(a)])}return v}
+function softPath(v,t){const n=v.length;let d="";
+  for(let i=0;i<n;i++){const p=v[(i+n-1)%n],c=v[i],q=v[(i+1)%n];
+    const ax=c[0]+(p[0]-c[0])*t,ay=c[1]+(p[1]-c[1])*t,bx=c[0]+(q[0]-c[0])*t,by=c[1]+(q[1]-c[1])*t;
+    d+=(i?"L":"M")+ax.toFixed(2)+" "+ay.toFixed(2)+"Q"+c[0].toFixed(2)+" "+c[1].toFixed(2)+" "+bx.toFixed(2)+" "+by.toFixed(2)}
+  return d+"Z"}
+function roundStar(cx,cy,R,jit){return softPath(starVerts(cx,cy,R,.56,jit),.34)}
+/* ===== PHYSICS_START ===== */
+const rC=9.5,YB=282,CR=20,TOPY=122;
+const smooth=t=>t*t*(3-2*t);
+function bounds(y){const t=smooth(clamp((y-128)/22,0,1));return[84-20*t,156+20*t]}
+function wall(c){
+  const [xl,xr]=bounds(c.y);
+  if(c.x<xl+rC){c.x=xl+rC;if(c.vx<0)c.vx*=-.3}
+  if(c.x>xr-rC){c.x=xr-rC;if(c.vx>0)c.vx*=-.3}
+  if(c.y<TOPY+rC){c.y=TOPY+rC;if(c.vy<0)c.vy*=-.3}
+  if(c.y>YB-rC){c.y=YB-rC;if(c.vy>0)c.vy*=-.3;c.vx*=.97}
+  if(c.y>YB-CR){
+    const l=64+CR,r=176-CR,cx0=c.x<l?l:(c.x>r?r:null);
+    if(cx0!==null){
+      const m=CR-rC,dx=c.x-cx0,dy=c.y-(YB-CR),d=Math.hypot(dx,dy)||.001;
+      if(d>m){c.x=cx0+dx/d*m;c.y=YB-CR+dy/d*m;
+        const vn=(c.vx*dx+c.vy*dy)/d;
+        if(vn>0){c.vx-=1.3*vn*dx/d;c.vy-=1.3*vn*dy/d}}
+    }
+  }
+}
+function physStep(cs,gx,gy,ptr){
+  for(const c of cs){
+    if(c.wait>0){c.wait--;continue}
+    c.vx+=gx;c.vy+=gy;
+    if(ptr){
+      const dx=c.x-ptr.x,dy=c.y-ptr.y,d=Math.hypot(dx,dy);
+      if(d<36){const f=1-d/36,u=d||1;
+        c.vx+=dx/u*f*.5+ptr.vx*f*.1;c.vy+=dy/u*f*.5+ptr.vy*f*.1;c.vr+=ptr.vx*f*.01}
+    }
+    c.vx*=.992;c.vy*=.992;
+    c.vx=clamp(c.vx,-6,6);c.vy=clamp(c.vy,-8,8);
+    c.x+=c.vx;c.y+=c.vy;c.rot+=c.vr;c.vr*=.97;
+  }
+  for(let it=0;it<3;it++){
+    for(let a=0;a<cs.length;a++){
+      const A=cs[a];if(A.wait>0)continue;
+      for(let b=a+1;b<cs.length;b++){
+        const B=cs[b];if(B.wait>0)continue;
+        const dx=B.x-A.x,dy=B.y-A.y,d2=dx*dx+dy*dy,min=2*rC;
+        if(d2<min*min&&d2>1e-6){
+          const d=Math.sqrt(d2),ov=(min-d)/2,nx=dx/d,ny=dy/d;
+          A.x-=nx*ov;A.y-=ny*ov;B.x+=nx*ov;B.y+=ny*ov;
+          const rv=(B.vx-A.vx)*nx+(B.vy-A.vy)*ny;
+          if(rv<0){const j=-(1.15)*rv/2;A.vx-=j*nx;A.vy-=j*ny;B.vx+=j*nx;B.vy+=j*ny}
+        }
+      }
+    }
+    for(const c of cs)if(!(c.wait>0))wall(c);
+  }
+}
+function newCandy(i){
+  const j=[];for(let k=0;k<10;k++)j.push((Math.random()-.5)*.14);
+  return{x:120,y:200,vx:0,vy:0,rot:(Math.random()-.5)*.8,vr:0,ci:i%5,j,wait:0};
+}
+/* ===== PHYSICS_END ===== */
+
+/* ---- 입력(커서, 기울기) ---- */
+const PTR={x:0,y:0,vx:0,vy:0,t:0,lx:0,ly:0,lt:0};
+addEventListener("pointermove",e=>{
+  const now=performance.now(),dt=Math.max(8,now-(PTR.lt||now-16));
+  PTR.vx=clamp((e.clientX-(PTR.lx||e.clientX))/dt*16,-14,14);
+  PTR.vy=clamp((e.clientY-(PTR.ly||e.clientY))/dt*16,-14,14);
+  PTR.x=e.clientX;PTR.y=e.clientY;PTR.lx=e.clientX;PTR.ly=e.clientY;PTR.lt=now;PTR.t=now;
+},{passive:true});
+const TILT={x:0,y:0,on:false};
+function onOri(e){if(e.gamma==null)return;TILT.on=true;TILT.x=clamp(e.gamma/35,-1,1);TILT.y=clamp(((e.beta==null?55:e.beta)-55)/35,-1,1)}
+if(typeof DeviceOrientationEvent!=="undefined"){
+  if(typeof DeviceOrientationEvent.requestPermission==="function"){
+    // 아이폰: 보안상 사용자가 화면을 처음 터치할 때 권한 팝업이 한 번 떠요. 허용하면 이후엔 자동이에요.
+    addEventListener("click",()=>{DeviceOrientationEvent.requestPermission().then(r=>{if(r==="granted")addEventListener("deviceorientation",onOri)}).catch(()=>{})},{once:true});
+  }else addEventListener("deviceorientation",onOri);
+}
+
+/* ---- 일러스트 (SVG) ---- */
+const JAR_D="M82 118 L82 126 Q62 138 62 164 L62 262 Q62 284 84 284 L156 284 Q178 284 178 262 L178 164 Q178 138 158 126 L158 118 Z";
+function sparkle(x,y,s,fill,delay){return `<path class="tw" style="animation-delay:${delay}s" d="M${x} ${y-s} Q${x} ${y} ${x+s} ${y} Q${x} ${y} ${x} ${y+s} Q${x} ${y} ${x-s} ${y} Q${x} ${y} ${x} ${y-s}Z" fill="${fill}" stroke="${INK}" stroke-width=".7"/>`}
+function flower(cx,cy,r,grad){
+  let s="";for(let i=0;i<5;i++){const a=-Math.PI/2+i*Math.PI*2/5;s+=`<circle cx="${(cx+Math.cos(a)*r*.62).toFixed(1)}" cy="${(cy+Math.sin(a)*r*.62).toFixed(1)}" r="${(r*.62).toFixed(1)}" fill="url(#${grad})" stroke="${INK}" stroke-width="1"/>`}
+  return s+`<circle cx="${cx}" cy="${cy}" r="${(r*.32).toFixed(1)}" fill="#F7E3A1" stroke="${INK}" stroke-width=".9"/>`}
+function backSVG(){return `<svg class="layer" viewBox="0 0 240 320" aria-hidden="true">
+  <ellipse cx="120" cy="299" rx="74" ry="8" fill="#e8dfcc" opacity=".8"/>
+  <g filter="url(#rough)"><path d="M26 298 Q120 268 214 296" fill="none" stroke="#BFD3EE" stroke-width="3.2" stroke-linecap="round" opacity=".9"/></g>
+  <path d="${JAR_D}" fill="url(#glass)" transform="translate(1.5 1.5)" opacity=".7" filter="url(#paint)"/>
+  <path d="${JAR_D}" fill="#eaf2fb" opacity=".55" filter="url(#paint)"/>
+  ${sparkle(30,64,7,"#F7E3A1",0)}${sparkle(208,92,6,"#F6C9D6",1.2)}${sparkle(44,126,5,"#BFD3EE",2.1)}${sparkle(212,156,7,"#F7E3A1",.6)}${sparkle(184,40,5,"#BFD3EE",1.8)}${sparkle(66,30,6,"#F6C9D6",2.6)}
+  <circle cx="22" cy="100" r="1.6" fill="#cfcbc2"/><circle cx="224" cy="124" r="1.6" fill="#cfcbc2"/><circle cx="52" cy="178" r="1.4" fill="#cfcbc2"/><circle cx="200" cy="40" r="1.6" fill="#cfcbc2"/>
+</svg>`}
+function frontSVG(){return `<svg class="layer" viewBox="0 0 240 320" aria-hidden="true">
+  <g filter="url(#paint)">
+    <path d="M40 298 Q34 270 30 246" fill="none" stroke="#8fb872" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M44 298 Q54 278 54 264" fill="none" stroke="#8fb872" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M204 298 Q212 266 207 238" fill="none" stroke="#8fb872" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M198 298 Q190 282 186 270" fill="none" stroke="#8fb872" stroke-width="2.2" stroke-linecap="round"/>
+    <ellipse cx="36" cy="282" rx="10" ry="4.2" transform="rotate(-32 36 282)" fill="#CFE3B0" stroke="${INK}" stroke-width="1"/>
+    <ellipse cx="50" cy="286" rx="9" ry="3.8" transform="rotate(28 50 286)" fill="#CFE3B0" stroke="${INK}" stroke-width="1"/>
+    <ellipse cx="208" cy="280" rx="10" ry="4.2" transform="rotate(30 208 280)" fill="#CFE3B0" stroke="${INK}" stroke-width="1"/>
+    <ellipse cx="194" cy="288" rx="8" ry="3.6" transform="rotate(-26 194 288)" fill="#CFE3B0" stroke="${INK}" stroke-width="1"/>
+    ${flower(30,241,11,"petal")}${flower(54,259,8,"petalB")}${flower(207,233,12,"petal")}${flower(186,265,7,"petalB")}
+    <g>
+      <ellipse cx="25.6" cy="237.4" rx="3.2" ry="1.8" transform="rotate(-32 25.6 237.4)" fill="#FFF1E3" stroke="${INK}" stroke-width=".8"/>
+      <ellipse cx="34.4" cy="237.4" rx="3.2" ry="1.8" transform="rotate(32 34.4 237.4)" fill="#FFF1E3" stroke="${INK}" stroke-width=".8"/>
+      <circle cx="30" cy="241.4" r="5.6" fill="#fffdf8" stroke="${INK}" stroke-width=".9"/>
+      <ellipse cx="30" cy="242" rx="3.7" ry="3.4" fill="#FFF1E3"/>
+      <circle cx="28.4" cy="241.6" r=".75" fill="${INK}"/><circle cx="31.6" cy="241.6" r=".75" fill="${INK}"/>
+      <circle cx="27.4" cy="243.4" r="1.1" fill="#F6C9D6" opacity=".9"/><circle cx="32.6" cy="243.4" r="1.1" fill="#F6C9D6" opacity=".9"/>
+      <path d="M29.2 243.6 Q30 244.5 30.8 243.6" fill="none" stroke="${INK}" stroke-width=".6" stroke-linecap="round"/>
+    </g>
+  </g>
+  <g filter="url(#paint)">
+    <path d="${JAR_D}" fill="none" stroke="${INK}" stroke-width="1.7" stroke-linejoin="round"/>
+    <path d="M71 166 Q69 205 71 250" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".6"/>
+    <path d="M84 140 Q75 146 72 154" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".6"/>
+    <path d="M169 196 L169 240" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".4"/>
+    <rect x="82" y="98" width="76" height="20" rx="7" fill="#F6C9D6" stroke="${INK}" stroke-width="1.6"/>
+    <path d="M90 104 Q120 100 150 104" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".6"/>
+    <path d="M116 134 C110 160 104 180 94 198 L105 203 C113 184 121 160 123 136 Z" fill="url(#plaid)" stroke="${INK}" stroke-width="1.1" stroke-linejoin="round"/>
+    <path d="M124 134 C131 160 138 178 150 192 L141 200 C130 184 122 160 118 136 Z" fill="url(#plaid)" stroke="${INK}" stroke-width="1.1" stroke-linejoin="round"/>
+    <path d="M80 122 Q120 132 160 122 L160 133 Q120 143 80 133 Z" fill="url(#plaid)" stroke="${INK}" stroke-width="1.1" stroke-linejoin="round"/>
+    <path d="M118 128 C100 110 80 116 86 132 C91 144 108 139 118 131 Z" fill="url(#plaid)" stroke="${INK}" stroke-width="1.1" stroke-linejoin="round"/>
+    <path d="M122 128 C140 110 160 116 154 132 C149 144 132 139 122 131 Z" fill="url(#plaid)" stroke="${INK}" stroke-width="1.1" stroke-linejoin="round"/>
+    <rect x="113" y="122" width="14" height="13" rx="4" fill="url(#plaid)" stroke="${INK}" stroke-width="1.1"/>
+    <path d="M26 298 Q120 322 214 296" fill="none" stroke="#BFD3EE" stroke-width="3.2" stroke-linecap="round" opacity=".95"/>
+  </g>
+</svg>`}
+function sheepSVG(happy){
+  const eyes=happy
+   ?`<path d="M113 85 Q116 82 119 85 M121 85 Q124 82 127 85" fill="none" stroke="${INK}" stroke-width="1.5" stroke-linecap="round"/>`
+   :`<g class="eyes"><circle cx="116" cy="85" r="1.8" fill="${INK}"/><circle cx="124" cy="85" r="1.8" fill="${INK}"/></g>`;
+  return `<svg class="layer" viewBox="0 0 240 320" aria-hidden="true"><g class="sheep" filter="url(#paint)">
+    <g fill="#fffdf8" stroke="${INK}" stroke-width="1.2">
+      <circle cx="105" cy="89" r="9"/><circle cx="135" cy="89" r="9"/><circle cx="111" cy="78" r="10"/><circle cx="129" cy="78" r="10"/><circle cx="120" cy="75" r="10"/><circle cx="120" cy="91" r="10"/>
+    </g>
+    <ellipse cx="111" cy="98" rx="4.5" ry="2.6" fill="#FFF1E3" stroke="${INK}" stroke-width="1"/><ellipse cx="129" cy="98" rx="4.5" ry="2.6" fill="#FFF1E3" stroke="${INK}" stroke-width="1"/>
+    <ellipse cx="107" cy="82" rx="6" ry="3.2" transform="rotate(-28 107 82)" fill="#FFF1E3" stroke="${INK}" stroke-width="1.1"/>
+    <ellipse cx="133" cy="82" rx="6" ry="3.2" transform="rotate(28 133 82)" fill="#FFF1E3" stroke="${INK}" stroke-width="1.1"/>
+    <ellipse cx="120" cy="86" rx="10.5" ry="9.5" fill="#FFF1E3" stroke="${INK}" stroke-width="1.2"/>
+    ${eyes}
+    <circle cx="112" cy="89.5" r="2.7" fill="#F6C9D6" opacity=".85"/><circle cx="128" cy="89.5" r="2.7" fill="#F6C9D6" opacity=".85"/>
+    <path d="M118 90 Q120 92.4 122 90" fill="none" stroke="${INK}" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="${roundStar(138,97,6.5)}" fill="#F7E3A1" stroke="${INK}" stroke-width="1" stroke-linejoin="round"/>
+  </g></svg>`}
+
+/* ---- 병 장면: 일러스트 + 별 물리 캔버스 ---- */
+function mountScene(host){
+  host.innerHTML=`<div class="stage">${backSVG()}<canvas class="layer"></canvas>${frontSVG()}<div class="sheepHost"></div></div>`;
+  const stage=host.firstElementChild,cv=stage.querySelector("canvas"),ctx=cv.getContext("2d");
+  const sheepHost=stage.querySelector(".sheepHost");
+  sheepHost.style.cssText="position:absolute;inset:0";
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const cs=[];let S=1,dpr=1,raf=0,alive=true,happy=false,eyesEl=null,dirty=true,still=0,lastG="";
+  let pal=paletteFor(null);
+
+  function setSheep(h){happy=h;sheepHost.innerHTML=sheepSVG(h);eyesEl=sheepHost.querySelector(".eyes")}
+  setSheep(false);
+
+  function resize(){const r=cv.getBoundingClientRect();if(!r.width)return;dpr=devicePixelRatio||1;cv.width=Math.round(r.width*dpr);cv.height=Math.round(r.height*dpr);S=cv.width/240;dirty=true}
+  const ro=new ResizeObserver(resize);ro.observe(cv);resize();
+
+  function settle(n){for(let i=0;i<n;i++)physStep(cs,0,.2,null)}
+  function setCount(target,animate){
+    while(cs.length>target)cs.pop();
+    const add=target-cs.length;
+    for(let i=0;i<add;i++){
+      const c=newCandy(cs.length);
+      if(animate&&!reduce){c.x=120+(Math.random()-.5)*30;c.y=140;c.vy=1.5;c.vx=(Math.random()-.5)*1.4;c.wait=i*9}
+      else{c.x=96+Math.random()*48;c.y=200+Math.random()*70}
+      cs.push(c);
+    }
+    if(!animate||reduce)settle(320);
+    dirty=true;
+  }
+  function hop(){const g=sheepHost.querySelector(".sheep");if(!g||reduce)return;g.classList.remove("hop");void g.getBoundingClientRect();g.classList.add("hop")}
+
+  function drawStar(c){
+    const R=12.8;
+    if(!c.p2)c.p2=new Path2D(roundStar(0,0,R,c.j));
+    ctx.save();ctx.translate(c.x*S,c.y*S);ctx.rotate(c.rot);ctx.scale(S,S);
+    ctx.save();ctx.translate(1.3,1.2);ctx.scale(.98,.98);ctx.globalAlpha=.9;ctx.fillStyle=pal.light[c.ci];ctx.fill(c.p2);ctx.restore();   // 번진 색
+    const g=ctx.createRadialGradient(-3,-4,1,0,0,R);g.addColorStop(0,pal.light[c.ci]);g.addColorStop(.6,pal.fill[c.ci]);g.addColorStop(1,pal.dark[c.ci]);
+    ctx.fillStyle=g;ctx.fill(c.p2);
+    ctx.lineJoin="round";ctx.lineWidth=1.1;ctx.strokeStyle=INK;ctx.stroke(c.p2);
+    ctx.fillStyle="rgba(255,255,255,.9)";ctx.beginPath();ctx.arc(-2.8,-3.2,1.5,0,6.3);ctx.fill();
+    ctx.fillStyle="rgba(74,74,85,.22)";ctx.beginPath();ctx.arc(2.4,1.8,.7,0,6.3);ctx.arc(-1,3.2,.6,0,6.3);ctx.arc(3.6,-1.6,.5,0,6.3);ctx.fill();
+    ctx.restore();
+  }
+  function draw(){ctx.clearRect(0,0,cv.width,cv.height);for(const c of cs)if(!(c.wait>0))drawStar(c);dirty=false}
+
+  function frame(){
+    if(!alive)return;raf=requestAnimationFrame(frame);
+    const r=cv.getBoundingClientRect();if(!r.width||r.bottom<0||r.top>innerHeight)return;
+    if(reduce){if(dirty)draw();return}
+    const k=r.width/240,now=performance.now(),active=now-PTR.t<600;
+    let ptr=null,gx=0,gy=.2;
+    if(active){
+      const wx=(PTR.x-r.left)/k,wy=(PTR.y-r.top)/k;
+      if(wx>30&&wx<210&&wy>90&&wy<310)ptr={x:wx,y:wy,vx:PTR.vx/k*.6,vy:PTR.vy/k*.6};
+      gx+=clamp((PTR.x-(r.left+r.width/2))/innerWidth,-.5,.5)*.14;
+    }
+    if(TILT.on){gx+=TILT.x*.26;gy=clamp(.2*(1+TILT.y*.4),.08,.3)}
+    if(eyesEl&&active){const sx=r.left+120*k,sy=r.top+85*k;
+      const ex=clamp((PTR.x-sx)/80,-1,1)*1.7,ey=clamp((PTR.y-sy)/80,-1,1)*1.2;
+      eyesEl.setAttribute("transform",`translate(${ex.toFixed(2)} ${ey.toFixed(2)})`)}
+    // 별이 눈에 안 보일 만큼만 흔들리고 입력이 없으면 계산을 쉬어요 (배터리 절약)
+    const gk=gx.toFixed(2)+","+gy.toFixed(2);
+    const calm=!ptr&&gk===lastG&&!dirty;
+    lastG=gk;
+    if(calm&&still>30)return;
+    const before=cs.map(c=>[c.x,c.y]);
+    physStep(cs,gx,gy,ptr);
+    let mv=0;cs.forEach((c,i)=>{mv=Math.max(mv,Math.abs(c.x-before[i][0])+Math.abs(c.y-before[i][1]))});
+    still=(calm&&mv<.2&&!cs.some(c=>c.wait>0))?still+1:0;
+    draw();
+  }
+  raf=requestAnimationFrame(frame);
+  return{setCount,setPalette:p=>{pal=p;dirty=true;still=0},setHappy:h=>{if(h!==happy)setSheep(h)},hop,destroy(){alive=false;cancelAnimationFrame(raf);ro.disconnect()}};
+}
+
+/* ---- 별 터지는 효과 (체크한 순간에만) ---- */
+const BASE_STAR=new Path2D(roundStar(0,0,10));
+const FX=(()=>{
+  const cv=$("#fx"),ctx=cv.getContext("2d"),reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W=0,H=0,ps=[],run=false;
+  function resize(){const d=devicePixelRatio||1;W=innerWidth;H=innerHeight;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0)}
+  addEventListener("resize",resize);resize();
+  function tick(){
+    ctx.clearRect(0,0,W,H);ps=ps.filter(p=>p.l<p.m);
+    for(const p of ps){p.l++;p.vy+=.12;p.x+=p.vx;p.y+=p.vy;p.vx*=.985;p.a+=p.va;
+      const t=p.l/p.m;ctx.globalAlpha=Math.max(0,1-t);ctx.fillStyle=p.c;ctx.strokeStyle=INK;ctx.lineWidth=1;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);const sc=p.r/10;ctx.scale(sc,sc);ctx.lineWidth=1/sc;ctx.lineJoin="round";
+      ctx.fill(BASE_STAR);ctx.stroke(BASE_STAR);ctx.restore()}
+    ctx.globalAlpha=1;
+    if(ps.length)requestAnimationFrame(tick);else{run=false;ctx.clearRect(0,0,W,H)}
+  }
+  return{burst(x,y,n=12,cols){cols=cols||COLORS;if(reduce)return;
+    for(let i=0;i<n;i++){const a=Math.random()*6.28,sp=2+Math.random()*3.5;
+      ps.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-1.5,r:5+Math.random()*5,l:0,m:50+Math.random()*25,a:Math.random()*6,va:(Math.random()-.5)*.2,c:cols[i%5]})}
+    if(!run){run=true;requestAnimationFrame(tick)}}};
+})();
+
+/* ---- 코칭 문구 (직접 고쳐 쓰세요) ---- */
+const MSG={
+  fresh:["첫 별은 '{next}'부터 모아볼까요?","가장 쉬운 것부터요. '{next}' 어때요?","첫 별 하나부터 모아볼까요?","시작이 제일 어려워요. 가장 쉬운 단계 하나만 해봐요.","병이 비어 있어도 괜찮아요. 천천히 채워요.","오늘은 별 하나면 충분해요.","준비되면 가장 쉬운 것부터 해요. 급할 거 없어요.","빈 병은 아직 시작 전일 뿐이에요."],
+  going:["다음 별은 '{next}'예요. 서두르지 않아도 돼요.","오늘 벌써 별 {today}개를 모았어요.","별이 벌써 {k}개나 모였어요.","잘 하고 있어요. 이 속도면 충분해요.","한 개씩, 그렇게 차오르고 있어요.","병 속이 조금씩 반짝이기 시작했어요.","꾸준히 모으는 중이에요. 그거면 돼요.","지금 쌓인 별들은 전부 내가 한 일이에요.","쉬엄쉬엄 가도 병은 차올라요."],
+  half:["다음은 '{next}'예요. 잠깐 쉬었다 해도 괜찮아요.","절반을 넘겼어요. 여기까지 온 것만으로도 대단해요.","벌써 반이나 왔네요. 오늘 한 만큼이 진짜예요.","병이 반 넘게 찼어요. 잠깐 숨 돌려도 괜찮아요.","여기까지 온 내가 꽤 괜찮아요.","이제 내리막이에요. 남은 별도 하나씩이면 돼요."],
+  urgent:["지금은 '{next}'만 해봐요. 10분이면 돼요.","지금은 별 하나만 모아볼까요? 10분이면 돼요.","마감이 가까워도 한 단계씩이면 돼요. 가장 작은 것부터요.","숨 한 번 쉬고, 별 하나만 해봐요.","다 하려고 하지 말고, 지금 보이는 것 하나만요.","타이머 15분만 맞추고 시작해볼까요?","가장 쉬운 단계부터 잡아도 괜찮아요. 별은 별이니까요."],
+  late:["'{next}'부터 작게 다시 시작해볼까요?","늦었어도 별은 여전히 모을 수 있어요.","괜찮아요. 지금 할 수 있는 작은 것 하나부터 해요.","자책은 잠깐 내려놓고, 별 하나만요.","밀렸다고 병이 사라지진 않아요. 다시 하나씩 채워요.","이 화면을 연 것부터가 시작이에요.","늦은 만큼 작게 쪼개서 가볼까요?"],
+  almost:["마지막 별은 '{next}'예요. 거의 다 왔어요.","거의 다 왔어요. 마지막 별만 남았어요.","별 하나만 더 넣으면 병이 가득 차요.","끝이 보여요. 마지막 한 걸음만 더요.","병이 거의 찼어요. 조금만 더 힘내요.","마지막 별은 가장 반짝일 거예요.","여기까지 끌고 온 내가 대견해요.","한 번 숨 고르고, 마지막 별 넣어볼까요?","여기까지 온 것만으로도 대단해요."],
+  done:["병이 가득 찼어요. 오늘은 충분해요.","정말 수고했어요. 이제 쉬어도 돼요.","별이 다 모였어요. 푹 쉬세요.","해냈어요. 오늘은 화면 끄고 좀 쉬어요.","가득 찬 병을 한 번 바라봐줘요. 내가 채운 거예요.","수고했어요. 맛있는 거 먹고 쉬어요.","끝났어요. 이제 정말 쉬어도 돼요."]
+};
+const lastPick={};
+function pickRand(key,ctx){
+  ctx=ctx||{k:0,next:"",today:0};
+  let a=MSG[key].filter(m=>!(m.includes("{today}")&&!ctx.today)&&!(m.includes("{next}")&&!ctx.next));
+  if(a.length>1&&lastPick[key])a=a.filter(m=>m!==lastPick[key]);
+  const m=a[Math.floor(Math.random()*a.length)];lastPick[key]=m;
+  return m.replace(/\{k\}/g,ctx.k).replace(/\{next\}/g,ctx.next).replace(/\{today\}/g,ctx.today);
+}
+function todayStars(){const d=toDS(new Date());return state.tasks.reduce((a,t)=>a+t.steps.filter(x=>x.doneAt&&toDS(new Date(x.doneAt))===d).length,0)}
+function coachText(t){
+  const n=t.steps.length,k=t.steps.filter(s=>s.done).length,left=n-k,d=dDiff(t.due);
+  const nx=t.steps.find(s=>!s.done);
+  let key;
+  if(k===n)key="done";else if(d<0)key="late";else if(left===1&&k>0)key="almost";
+  else if(d<=2&&k/n<.5)key="urgent";else if(k===0)key="fresh";else if(k/n>=.5)key="half";else key="going";
+  return pickRand(key,{k,next:nx?nx.text:"",today:todayStars()});
+}
+
+/* ---- 화면 전환 ---- */
+function show(id){["s1","s2","s3"].forEach(x=>$("#"+x).hidden=x!==id);window.scrollTo(0,0)}
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("on");clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove("on"),4200)}
+
+/* ---- 화면 1 ---- */
+function miniStars(t){
+  const k=t.steps.filter(s=>s.done).length,pf=paletteFor(t).fill;
+  return t.steps.map((s,i)=>`<svg width="16" height="16" viewBox="0 0 16 16"><path d="${roundStar(8,8,7)}" fill="${i<k?pf[i%5]:"none"}" stroke="${i<k?INK:"#b9b5ab"}" stroke-width="1" ${i<k?"":'stroke-dasharray="2 2"'}/></svg>`).join("");
+}
+function pctOf(t){return Math.round(t.steps.filter(x=>x.done).length/t.steps.length*100)}
+function renderList(){
+  const act=state.tasks.filter(t=>!t.completedAt).sort((a,b)=>a.due.localeCompare(b.due));
+  let h="";
+  if(!act.length)h=state.tasks.length
+    ?`<div class="empty">지금 담고 있는 병이 없어요.<br>가득 채운 병은 아래 '돌아보기'에서 볼 수 있어요.</div>`
+    :`<div class="empty">아직 빈 병이 없어요.<br>아래에서 첫 과제를 담아봐요.</div>`;
+  h+=act.map(t=>`<button class="item" data-id="${t.id}"><div style="flex:1"><div><span class="dot" style="background:${swatchBg(t.color)}"></span>${esc(t.title)}</div><small>${ddText(dDiff(t.due))} · ${pctOf(t)}%</small></div><div class="mini">${miniStars(t)}</div></button>`).join("");
+  $("#list").innerHTML=h;
+  document.querySelectorAll(".item").forEach(b=>b.onclick=()=>openTask(b.dataset.id));
+  renderReview();
+}
+/* ---- 돌아보기: 주간/월간 (목록 화면 안의 패널) ---- */
+const rv={mode:"week",off:0,sel:null};
+const toDS=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+function rvRange(){
+  const t=midnight(new Date());
+  if(rv.mode==="week"){
+    const s=new Date(t);s.setDate(t.getDate()-((t.getDay()+6)%7)+rv.off*7);
+    const e=new Date(s);e.setDate(s.getDate()+6);
+    return{s:toDS(s),e:toDS(e),label:`${s.getMonth()+1}/${s.getDate()} – ${e.getMonth()+1}/${e.getDate()}`};
+  }
+  const s=new Date(t.getFullYear(),t.getMonth()+rv.off,1),e=new Date(s.getFullYear(),s.getMonth()+1,0);
+  return{s:toDS(s),e:toDS(e),label:`${s.getFullYear()}년 ${s.getMonth()+1}월`};
+}
+function starSvg(sz,fill){return `<svg width="${sz}" height="${sz}" viewBox="0 0 16 16" aria-hidden="true"><path d="${roundStar(8,8,7.5)}" fill="${fill}" stroke="${INK}" stroke-width="1" stroke-linejoin="round"/></svg>`}
+function reviewRow(t,cls,note){return `<button class="item ritem ${cls}" data-id="${t.id}"><div style="flex:1"><div>${esc(t.title)}</div><small>${note}</small></div><div class="mini">${miniStars(t)}</div></button>`}
+function dayMaps(){
+  const stars={},due={},fin={};
+  for(const t of state.tasks){
+    (due[t.due]=due[t.due]||[]).push(t);
+    if(t.completedAt){const d=toDS(new Date(t.completedAt));(fin[d]=fin[d]||[]).push(t)}
+    for(const st of t.steps)if(st.doneAt){const d=toDS(new Date(st.doneAt));(stars[d]=stars[d]||[]).push({t,text:st.text})}
+  }
+  return{stars,due,fin};
+}
+function calHTML(r){
+  const [y,m]=r.s.split("-").map(Number),lead=(new Date(y,m-1,1).getDay()+6)%7,days=new Date(y,m,0).getDate();
+  const {stars,due,fin}=dayMaps(),today=toDS(new Date());
+  let h=`<div class="cal" role="group" aria-label="${y}년 ${m}월 달력">`+["월","화","수","목","금","토","일"].map(x=>`<div class="cal-h">${x}</div>`).join("");
+  for(let i=0;i<lead;i++)h+="<div></div>";
+  for(let d=1;d<=days;d++){
+    const ds=`${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    const sa=stars[ds]||[],da=due[ds]||[],fa=fin[ds]||[];
+    const shown=sa.slice(0,4).map((x,i)=>starSvg(10,paletteFor(x.t).fill[i%5])).join("")+(sa.length>4?`<span class="more">+${sa.length-4}</span>`:"");
+    const mark=da.length?`<span class="due${da.every(t=>t.completedAt)?" ok":""}"></span>`:"";
+    const label=`${m}월 ${d}일`+(sa.length?`, 별 ${sa.length}개`:"")+(da.length?`, 마감 ${da.length}개`:"")+(fa.length?`, 가득 채운 병 ${fa.length}개`:"");
+    h+=`<button type="button" class="cal-day${fa.length?" full":""}${ds===today?" today":""}${rv.sel===ds?" sel":""}" data-d="${ds}" aria-label="${label}" aria-pressed="${rv.sel===ds}"><span class="n">${d}</span><span class="stars">${shown}</span>${mark}</button>`;
+  }
+  return h+`</div><p class="hint l">★ 모은 별 · ○ 마감일 · ● 마감한 과제를 모두 채운 날 · 연두색 칸은 병을 가득 채운 날</p>`;
+}
+function dayDetail(ds){
+  const {stars,due,fin}=dayMaps(),sa=stars[ds]||[],da=due[ds]||[],fa=fin[ds]||[];
+  const [y,m,d]=ds.split("-").map(Number),wd="일월화수목금토"[new Date(y,m-1,d).getDay()];
+  let h=`<div class="cal-detail"><strong>${m}월 ${d}일 (${wd})</strong>`;
+  if(!sa.length&&!da.length&&!fa.length)return h+`<p class="hint l" style="margin:8px 0 0">이 날은 기록이 없어요. 쉬는 날도 괜찮아요.</p></div>`;
+  if(sa.length)h+=`<div class="rh">모은 별 ${sa.length}개</div><ul class="dl">`+sa.map(x=>`<li>${esc(x.text)} <span class="dd">· ${esc(x.t.title)}</span></li>`).join("")+`</ul>`;
+  if(fa.length)h+=`<div class="rh">가득 채운 병</div>`+fa.map(t=>reviewRow(t,"fin","이 날 가득 채웠어요")).join("");
+  if(da.length)h+=`<div class="rh">마감</div>`+da.map(t=>reviewRow(t,t.completedAt?"fin":"open",t.completedAt?"가득 채웠어요":`${pctOf(t)}% 진행`)).join("");
+  return h+`</div>`;
+}
+function renderReview(){
+  const r=rvRange(),inR=ds=>ds>=r.s&&ds<=r.e,box=$("#review");
+  const cd=t=>t.completedAt?toDS(new Date(t.completedAt)):null;
+  const done=state.tasks.filter(t=>t.completedAt&&inR(cd(t)));
+  const open=state.tasks.filter(t=>!done.includes(t)&&inR(t.due)&&(!t.completedAt||cd(t)>r.e));
+  const sm=dayMaps().stars;let starCount=0;for(const ds in sm)if(inR(ds))starCount+=sm[ds].length;
+  if(rv.sel&&!inR(rv.sel))rv.sel=null;
+  let h=`<div class="row"><strong>돌아보기</strong><div class="seg"><button data-m="week" class="${rv.mode==="week"?"on":""}">주간</button><button data-m="month" class="${rv.mode==="month"?"on":""}">월간</button></div></div>
+    <div class="rnav"><button data-o="-1" aria-label="이전">◀</button><span>${r.label}${rv.off===0?" (이번)":""}</span><button data-o="1" aria-label="다음">▶</button></div>`;
+  if(rv.mode==="month")h+=calHTML(r)+(rv.sel?dayDetail(rv.sel):"");
+  if(!done.length&&!open.length&&!starCount)h+=`<div class="empty">${rv.mode==="month"?"이 달에는 기록이 없어요":"이 기간에는 담은 병이 없어요"}</div>`;
+  else{
+    h+=`<div class="rsum">가득 채운 병 ${done.length}개 · 모은 별 ${starCount}개</div>`;
+    if(done.length)h+=`<div class="rh">가득 채운 병</div>`+done.map(t=>reviewRow(t,"fin",`${cd(t)} 완료`)).join("");
+    if(open.length)h+=`<div class="rh">아직 담고 있는 병</div>`+open.map(t=>reviewRow(t,"open",`${t.due} 마감 · ${pctOf(t)}%${t.completedAt?" · 나중에 가득 채웠어요":""}`)).join("");
+  }
+  box.innerHTML=h;
+  box.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{rv.mode=b.dataset.m;rv.off=0;rv.sel=rv.mode==="month"?toDS(new Date()):null;renderReview()});
+  box.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{rv.off+=+b.dataset.o;rv.sel=null;renderReview()});
+  box.querySelectorAll(".cal-day").forEach(b=>b.onclick=()=>{rv.sel=rv.sel===b.dataset.d?null:b.dataset.d;renderReview()});
+  box.querySelectorAll(".ritem").forEach(b=>b.onclick=()=>openTask(b.dataset.id));
+}
+function addStepInput(val=""){
+  const box=$("#fSteps");if(box.children.length>=5)return;
+  const i=document.createElement("input");i.placeholder=`단계 ${box.children.length+1}`;i.setAttribute("aria-label",`단계 ${box.children.length+1}`);i.maxLength=60;i.value=val;box.appendChild(i)}
+function resetForm(){$("#fTitle").value="";$("#fDue").value="";$("#fSteps").innerHTML="";for(let i=0;i<3;i++)addStepInput();$("#err").textContent="";pickFormColor(nextColor());$("#fRem").value="off";$("#fRemTime").hidden=true;$("#fRemTime").value="20:00";$("#tplHint").textContent="유형을 누르면 단계 초안이 채워져요. 직접 적어도 돼요.";document.querySelectorAll("#tpl .chip").forEach(x=>x.classList.remove("on"))}
+$("#addStep").onclick=()=>{if($("#fSteps").children.length>=5){$("#err").textContent="단계는 최대 5개예요.";return}addStepInput();$("#err").textContent=""};
+$("#save").onclick=()=>{
+  const title=$("#fTitle").value.trim(),due=$("#fDue").value;
+  const steps=[...$("#fSteps").children].map(i=>i.value.trim()).filter(Boolean);
+  if(!title)return $("#err").textContent="과제 이름을 적어주세요.";
+  if(!due)return $("#err").textContent="마감일을 골라주세요.";
+  if(steps.length<3)return $("#err").textContent="단계를 3개 이상 적어주세요. 작게 쪼갤수록 쉬워져요.";
+  const t={id:uid(),title,due,steps:steps.map(text=>({text,done:false})),createdAt:new Date().toISOString(),completedAt:null,reflection:"",remind:readRem($("#fRem"),$("#fRemTime")),color:fColor};
+  lastRemindAt[t.id]=Date.now();
+  state.tasks.push(t);save();resetForm();
+  renderList();openTask(t.id);
+};
+
+/* ---- 화면 2 ---- */
+function openTask(id){
+  current=state.tasks.find(t=>t.id===id);if(!current)return;
+  if(current.completedAt){showDone();return}
+  if(jarScene)jarScene.destroy();
+  show("s2");
+  jarScene=mountScene($("#jar"));
+  showRem($("#jRem"),$("#jRemTime"),current.remind);
+  jarScene.setPalette(paletteFor(current));
+  renderSwatches($("#jColor"),current.color,pickJarColor);
+  syncJar(false);
+}
+function syncJar(animate){
+  const t=current,n=t.steps.length,k=t.steps.filter(s=>s.done).length;
+  $("#jTitle").innerHTML=`<span class="dot" style="background:${swatchBg(t.color)}"></span>${esc(t.title)}`;$("#jDue").textContent=ddText(dDiff(t.due));
+  jarScene.setCount(Math.round(TOTAL*k/n),animate);
+  jarScene.setHappy(k===n);
+  {const st=$("#jar .stage");st.setAttribute("role","img");st.setAttribute("aria-label",`별사탕 병. ${n}단계 중 ${k}단계 완료`)}
+  $("#pct").textContent=`${k}/${n}단계 · ${Math.round(k/n*100)}%`;
+  $("#coach").textContent=coachText(t);
+  $("#jSteps").innerHTML=t.steps.map((s,i)=>`<label class="step ${s.done?"done":""}"><input type="checkbox" data-i="${i}" ${s.done?"checked":""}><span>${esc(s.text)}</span></label>`).join("");
+  document.querySelectorAll("#jSteps input").forEach(c=>c.onchange=()=>{
+    {const st=t.steps[+c.dataset.i];st.done=c.checked;st.doneAt=c.checked?new Date().toISOString():null}save();
+    const nk=t.steps.filter(s=>s.done).length;
+    syncJar(true);
+    if(c.checked){
+      jarScene.hop();
+      const r=$("#jar .stage").getBoundingClientRect();FX.burst(r.left+r.width/2,r.top+r.height*.4,nk===n?28:12,paletteFor(t).fill);
+    }
+    if(nk===n){t.completedAt=new Date().toISOString();save();setTimeout(showDone,2200)}
+  });
+}
+$("#back").onclick=()=>{renderList();show("s1")};
+$("#del").onclick=()=>{if(confirm("이 과제를 지울까요?")){state.tasks=state.tasks.filter(t=>t!==current);save();renderList();show("s1")}};
+
+/* ---- 화면 3 ---- */
+function showDone(){
+  const t=current;
+  if(doneScene)doneScene.destroy();
+  show("s3");
+  doneScene=mountScene($("#fullJar"));
+  doneScene.setPalette(paletteFor(t));doneScene.setCount(TOTAL,false);doneScene.setHappy(true);
+  {const st=$("#fullJar .stage");st.setAttribute("role","img");st.setAttribute("aria-label","별사탕 병이 가득 찼어요")}
+  $("#doneMsg").textContent=pickRand("done");
+  $("#refl").value=t.reflection||"";
+  setTimeout(()=>{const r=$("#fullJar .stage").getBoundingClientRect();FX.burst(r.left+r.width/2,r.top+r.height*.4,30,paletteFor(t).fill)},200);
+}
+$("#finish").onclick=()=>{current.reflection=$("#refl").value.trim();save();renderList();show("s1")};
+
+/* ---- 프로젝트 색 고르기 ---- */
+let fColor="mix";
+function nextColor(){
+  const used=state.tasks.filter(t=>!t.completedAt).map(t=>t.color);
+  const free=PRESETS.find(p=>!used.includes(p.k));
+  return free?free.k:PRESETS[state.tasks.length%PRESETS.length].k;
+}
+function renderSwatches(box,sel,onPick){
+  const keys=[...PRESETS.map(p=>p.k),"mix"],name=k=>k==="mix"?"믹스":PRESETS.find(p=>p.k===k).n;
+  box.innerHTML=keys.map(k=>`<button type="button" class="sw" data-k="${k}" aria-label="${name(k)}" aria-pressed="${k===sel}" style="background:${swatchBg(k)}"></button>`).join("");
+  box.querySelectorAll(".sw").forEach(b=>b.onclick=()=>onPick(b.dataset.k));
+}
+function pickFormColor(k){fColor=k;renderSwatches($("#fColor"),k,pickFormColor);const n=k==="mix"?"믹스":PRESETS.find(p=>p.k===k).n;$("#fColorHint").textContent=`${n} 계열의 별사탕이 만들어져요.`}
+function pickJarColor(k){
+  if(!current)return;current.color=k;save();
+  renderSwatches($("#jColor"),k,pickJarColor);
+  jarScene.setPalette(paletteFor(current));
+  $("#jTitle").innerHTML=`<span class="dot" style="background:${swatchBg(k)}"></span>${esc(current.title)}`;
+}
+
+/* ---- 과제 유형별 단계 초안 (직접 고쳐 쓰세요) ---- */
+const TPL={
+  "리포트":["주제 정하고 자료 3개 찾기","개요 한 장 쓰기","초안 쓰기","고쳐 쓰고 형식 맞추기","제출 전에 한 번 읽기"],
+  "발표":["발표 목적과 흐름 적기","슬라이드 뼈대 만들기","내용 채우기","소리 내어 한 번 연습하기"],
+  "시험":["시험 범위 확인하기","핵심 내용 한 장으로 정리하기","문제 풀어보기","틀린 것 다시 보기"],
+  "팀플":["내 역할 확인하기","맡은 부분 초안 만들기","팀에 공유하고 의견 받기","수정해서 합치기"],
+  "문제풀이":["문제 쭉 훑어보기","쉬운 문제부터 풀기","어려운 문제 풀기","답 검토하기"]
+};
+$("#tpl").innerHTML=Object.keys(TPL).map(k=>`<button type="button" class="chip" data-k="${k}">${k}</button>`).join("");
+document.querySelectorAll("#tpl .chip").forEach(b=>b.onclick=()=>{
+  const inputs=[...$("#fSteps").children];
+  if(inputs.some(i=>i.value.trim())&&!confirm("적어둔 단계를 이 초안으로 바꿀까요?"))return;
+  $("#fSteps").innerHTML="";TPL[b.dataset.k].forEach(t=>addStepInput(t));while($("#fSteps").children.length<3)addStepInput();
+  document.querySelectorAll("#tpl .chip").forEach(x=>x.classList.toggle("on",x===b));
+  $("#tplHint").textContent=`${b.dataset.k} 초안이에요. 내 과제에 맞게 고쳐서 담아주세요.`;
+});
+
+/* ---- 알림: 과제마다 설정 (탭이 열려 있을 때만) ---- */
+const REM={
+  soft:["'{title}', 별 하나만 모아볼까요? '{next}'부터요.","잠깐 숨 돌렸나요? '{next}'가 기다리고 있어요.","오늘은 별 하나면 충분해요. '{next}' 어때요?","10분만 해볼까요? '{title}'의 '{next}'예요."],
+  late:["'{title}'이 밀렸어도 괜찮아요. '{next}'부터 작게요.","늦었어도 별은 모을 수 있어요. '{next}' 하나만요."]
+};
+const REM_OPTS='<option value="off">받지 않기</option><option value="every:30">30분마다</option><option value="every:60">1시간마다</option><option value="every:120">2시간마다</option><option value="daily">매일 정해진 시각에</option>';
+const remToValue=r=>(!r||r.mode==="off")?"off":(r.mode==="every"?`every:${r.every}`:"daily");
+function readRem(sel,time){const v=sel.value;
+  if(v==="off")return{mode:"off"};
+  if(v==="daily")return{mode:"daily",time:time.value||"20:00",lastDaily:null};
+  return{mode:"every",every:+v.split(":")[1]}}
+function showRem(sel,time,r){sel.value=remToValue(r);time.hidden=sel.value!=="daily";time.value=(r&&r.time)||"20:00"}
+async function askNotifPerm(){if(typeof Notification!=="undefined"&&Notification.permission==="default"){try{await Notification.requestPermission()}catch(e){}}}
+function cleanRem(r){
+  if(!r||typeof r!=="object")return{mode:"off"};
+  if(r.mode==="every"&&[30,60,120].includes(+r.every))return{mode:"every",every:+r.every};
+  if(r.mode==="daily"&&/^\d{2}:\d{2}$/.test(r.time||""))return{mode:"daily",time:r.time,lastDaily:r.lastDaily||null};
+  return{mode:"off"}}
+function remLabel(r){return r.mode==="every"?({30:"30분마다",60:"1시간마다",120:"2시간마다"}[r.every]||`${r.every}분마다`):`매일 ${r.time}`}
+
+$("#fRem").innerHTML=REM_OPTS;$("#jRem").innerHTML=REM_OPTS;
+$("#fRem").onchange=()=>{$("#fRemTime").hidden=$("#fRem").value!=="daily";if($("#fRem").value!=="off")askNotifPerm()};
+$("#jRem").onchange=()=>{
+  $("#jRemTime").hidden=$("#jRem").value!=="daily";
+  if(!current)return;
+  current.remind=readRem($("#jRem"),$("#jRemTime"));lastRemindAt[current.id]=Date.now();save();
+  if(current.remind.mode!=="off"){askNotifPerm();toast(`알림을 바꿨어요: ${remLabel(current.remind)}`)}else toast("이 과제 알림을 껐어요.");
+};
+$("#jRemTime").onchange=$("#jRem").onchange;
+
+const loadTime=Date.now(),lastRemindAt={};
+let lastInteract=Date.now();
+["pointerdown","keydown"].forEach(ev=>addEventListener(ev,()=>{lastInteract=Date.now()},{passive:true}));
+function remindTick(force){
+  const now=new Date(),ms=now.getTime();
+  if(!force&&ms-lastInteract<5*60000)return false;
+  const due=[];
+  for(const t of state.tasks){
+    const r=t.remind;if(t.completedAt||!r||r.mode==="off")continue;
+    if(r.mode==="every"){
+      const last=lastRemindAt[t.id]!==undefined?lastRemindAt[t.id]:loadTime;
+      if(force||ms-last>=r.every*60000)due.push(t);
+    }else if(r.mode==="daily"){
+      const [hh,mm]=(r.time||"20:00").split(":").map(Number),target=new Date(now);target.setHours(hh,mm,0,0);
+      const diff=ms-target.getTime();
+      if(force||(diff>=0&&diff<60*60000&&r.lastDaily!==toDS(now)))due.push(t);
+    }
+  }
+  if(!due.length)return false;
+  due.sort((a,b)=>a.due.localeCompare(b.due));
+  const t=due[0],nx=t.steps.find(x=>!x.done);if(!nx)return false;
+  const arr=dDiff(t.due)<0?REM.late:REM.soft;
+  const msg=arr[Math.floor(Math.random()*arr.length)].replace(/\{title\}/g,t.title).replace(/\{next\}/g,nx.text);
+  let sent=false;
+  if(typeof Notification!=="undefined"&&Notification.permission==="granted"&&document.hidden){
+    try{new Notification("별사탕 병",{body:msg});sent=true}catch(e){}
+  }
+  if(!sent&&!document.hidden){toast(msg);sent=true}
+  if(!sent)return false;
+  for(const x of due){lastRemindAt[x.id]=ms;if(x.remind.mode==="daily")x.remind.lastDaily=toDS(now)}
+  save();return true;
+}
+setInterval(()=>remindTick(false),30000);
+
+/* ---- 제목 옆 로고 ---- */
+$("#logo").innerHTML=`<svg width="36" height="36" viewBox="0 0 40 40"><g fill="#fffdf8" stroke="${INK}" stroke-width="1.2"><circle cx="13" cy="23" r="7"/><circle cx="27" cy="23" r="7"/><circle cx="16" cy="16" r="7.5"/><circle cx="24" cy="16" r="7.5"/><circle cx="20" cy="27" r="7"/></g>
+<ellipse cx="11" cy="19" rx="4.4" ry="2.4" transform="rotate(-28 11 19)" fill="#FFF1E3" stroke="${INK}" stroke-width="1"/><ellipse cx="29" cy="19" rx="4.4" ry="2.4" transform="rotate(28 29 19)" fill="#FFF1E3" stroke="${INK}" stroke-width="1"/>
+<ellipse cx="20" cy="23" rx="8" ry="7.2" fill="#FFF1E3" stroke="${INK}" stroke-width="1.1"/>
+<circle cx="16.8" cy="22.4" r="1.2" fill="${INK}"/><circle cx="23.2" cy="22.4" r="1.2" fill="${INK}"/>
+<circle cx="14.6" cy="26" r="1.9" fill="#F6C9D6" opacity=".9"/><circle cx="25.4" cy="26" r="1.9" fill="#F6C9D6" opacity=".9"/>
+<path d="M18.6 26.4 Q20 28 21.4 26.4" fill="none" stroke="${INK}" stroke-width="1" stroke-linecap="round"/>
+<path d="${roundStar(33,7,5)}" fill="#F7E3A1" stroke="${INK}" stroke-width="1" stroke-linejoin="round"/></svg>`;
+
+/* ---- 시작 ---- */
+(function init(){
+  const now=new Date();
+  if(state.lastOpened){
+    const gap=Math.floor((now-new Date(state.lastOpened))/86400000);
+    if(gap>=3&&state.tasks.some(t=>!t.completedAt))setTimeout(()=>toast("돌아와줘서 고마워요. 별 하나부터 다시 모아봐요."),400);
+  }
+  state.lastOpened=now.toISOString();save();
+  resetForm();renderList();
+})();
+</script>
+</body>
+</html>
