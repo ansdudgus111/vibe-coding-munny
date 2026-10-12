@@ -1,0 +1,129 @@
+<title>Starmp — 발표 대본</title>
+<style>
+:root{
+  --paper:#FFFDF8;--pink:#F6C9D6;--sky:#BFD3EE;--green:#CFE3B0;--butter:#F7E3A1;
+  --ink:#4A4A55;--sub:#666673;--pink-deep:#EBA9BD;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Apple SD Gothic Neo","Noto Sans KR",-apple-system,sans-serif;
+  color:var(--ink);background:var(--paper);line-height:1.7;
+}
+.doc{max-width:210mm;margin:0 auto;padding:14mm 16mm 20mm}
+.title{text-align:center;margin-bottom:6mm}
+.title h1{font-size:26px;margin:0 0 4px}
+.title p{color:var(--sub);font-size:13px;margin:0}
+.totalbar{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:10px 0 16px}
+.totalbar span{font-size:12px;border:1.2px solid var(--ink);border-radius:999px;padding:3px 11px;background:rgba(255,255,255,.6)}
+.block{border:1.5px solid var(--ink);border-radius:14px 10px 15px 11px;background:rgba(255,255,255,.7);
+  padding:14px 18px;margin-bottom:12px;break-inside:avoid;page-break-inside:avoid}
+.block .head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.block .head h2{font-size:17px;margin:0}
+.block .time{font-size:12.5px;font-weight:700;background:var(--butter);border:1.2px solid var(--ink);
+  border-radius:999px;padding:3px 11px;white-space:nowrap}
+.block.pink{background:rgba(246,201,214,.28)}
+.block.sky{background:rgba(191,211,238,.25)}
+.block.green{background:rgba(207,227,176,.3)}
+.script{font-size:15px;line-height:1.75;white-space:pre-line}
+.readaloud{background:rgba(255,255,255,.75);border:1.2px dashed var(--pink-deep);border-radius:10px;
+  padding:8px 12px;margin:8px 0;font-size:14px;color:var(--ink)}
+.readaloud b{color:var(--pink-deep);font-size:11px;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:3px}
+.note{font-size:12px;color:var(--sub);margin-top:6px}
+.charcount{font-size:11px;color:var(--sub);text-align:right;margin-top:6px}
+@page{size:A4;margin:12mm}
+@media print{.block{break-inside:avoid}}
+</style>
+
+<div class="doc">
+  <div class="title">
+    <h1>Starmp — 발표 대본</h1>
+    <p>1인 7분 발표 + 질의 3분 · pitchdeck.html 기준으로 작성</p>
+  </div>
+  <div class="totalbar">
+    <span>표지 ~20초</span><span>데모 1.5분</span><span>나이브 베이스라인 1분</span>
+    <span>의사결정 3건 3.5분</span><span>결론 0.5분</span><span><strong>합계 7분</strong></span>
+  </div>
+
+  <div class="block">
+    <div class="head"><h2>표지</h2><span class="time">~20초</span></div>
+    <div class="script">안녕하세요, Starmp를 만든 munny입니다.
+Starmp는 번아웃 온 대학생이 과제를 3~5단계로 쪼개고, 단계를 끝낼 때마다 별사탕이 병에 차오르는 걸 보면서 다정한 코칭을 받는 앱이에요.
+지금부터 7분 동안 이걸 어떻게 만들었는지, AI와 어떤 판단을 주고받았는지 보여드릴게요.</div>
+    <div class="charcount">약 95자 · 20초 기준 적정</div>
+  </div>
+
+  <div class="block sky">
+    <div class="head"><h2>슬라이드 2 — 데모</h2><span class="time">1.5분</span></div>
+    <div class="script">먼저 실제로 어떻게 동작하는지 보여드릴게요.
+화면은 딱 3개예요 — 목록, 병, 완료.
+
+출발점은 이거였어요. 이번 학기 번아웃이 와서 할 일은 쌓이는데, 화면만 들여다보고 있었거든요.
+기존 일정 관리 앱은 핵심 기능이 유료화돼 있거나, 무료 플래너는 그냥 숫자랑 목록뿐이라 진행 상황이 눈에 안 보여서 오히려 앱을 열기 싫어지더라고요.
+그래서 핵심 기능을 딱 하나로 정했어요 — 단계를 체크하면 병이 차오르고, 그때그때 코칭 문구가 뜨는 것.</div>
+    <div class="note">[이 지점에서 실제 배포 사이트 시연: 목록 → 과제 열기(병) → 알림 미리보기 버튼 → 단계 체크해서 완료 화면까지]</div>
+    <div class="charcount">약 230자 + 시연 시간 · 1.5분(90초) 기준, 말은 짧게 하고 시연에 시간을 더 씀</div>
+  </div>
+
+  <div class="block green">
+    <div class="head"><h2>슬라이드 3 — 나이브 베이스라인</h2><span class="time">1분</span></div>
+    <div class="script">본격적으로 들어가기 전에, AI한테 아무 설명 없이 한 줄만 던지면 뭘 혼자 결정하는지부터 봤어요.</div>
+    <div class="readaloud"><b>읽을 것 — 실제 프롬프트 4개</b>
+"대학생용 투두리스트 앱 만들어줘"
+"번아웃 학생에게 힐링 요소 추가해줘" / "힐링 컨셉 UI로 만들어줘" / "잊지 않고 완료하는 방법을 생각해봐"</div>
+    <div class="script">AI는 묻지도 않은 분류·우선순위 필드를 추가했고, "방법을 생각해봐"라는 아이디어 요청엔 되묻지도 않고 알림·연속기록·등급 시스템을 통째로 구현해버렸어요. 질문이랑 구현을 구분을 못 하더라고요.
+"힐링 컨셉"이라는 말도 분위기로 안 풀고, 그냥 제목에 "힐링"이라는 단어를 박아넣었고요.
+느낀 건, AI가 프롬프트 속 단어를 꽤 글자 그대로 받아들인다는 거였어요.</div>
+    <div class="charcount">약 280자 + 인용 4줄 · 1분(60초) 기준 적정, 인용은 빠르게 읽기</div>
+  </div>
+
+  <div class="block pink">
+    <div class="head"><h2>슬라이드 4 — 의사결정 사례 1 <span style="font-weight:400">(개입함)</span></h2><span class="time">~70초</span></div>
+    <div class="script">첫 번째 의사결정이에요.
+막연하게 "할 일 관리 앱 만들어줘"라고 할 수도 있었는데, 그러면 방금 봤던 것처럼 또 피상적인 "힐링" 키워드가 나올 거라고 생각했어요. 그래서 제 번아웃 경험을 구체적으로 넣어서 시작했어요.</div>
+    <div class="readaloud"><b>읽을 것 — 실제 시작 프롬프트</b>
+"나는 내가 해야되는 일을 시각적으로 보여주고 목표를 설정하면 팝업으로 지속적으로 알려주는 걸 만들고 싶거든 … 번아웃이 와서 스크린 타임은 느는데 할 일은 똑바로 안 됐거든 … 가시적으로 할일을 할 수 있도록 도와주고 힐링할 수 있는 앱을 만들고 싶어"</div>
+    <div class="script">이 설명 덕분에 "별사탕이 병에 차오른다"는 구체적인 비유가 나왔고, 이게 지금 핵심 기능의 뼈대가 됐어요.
+이건 제가 개입한 사례예요. 일반적인 요청 대신 제 상황을 넣어서, AI가 잡을 방향 자체를 처음부터 좁힌 거니까요.</div>
+    <div class="charcount">약 330자 + 긴 인용 1개 · 70초 기준, 인용 부분은 또박또박 천천히</div>
+  </div>
+
+  <div class="block pink">
+    <div class="head"><h2>슬라이드 5 — 의사결정 사례 2 <span style="font-weight:400">(개입함)</span></h2><span class="time">~70초</span></div>
+    <div class="script">두 번째는 앱 무드를 정할 때였어요.
+손그림 스티커나 폰트 샘플 같은 레퍼런스 이미지를 모아서 전달했는데, 그중 하나가 "Curly Story"라는 폰트였어요. 그런데 이건 상업용 폰트라서, 제 저장소가 Public인 이상 그대로 쓰면 라이선스 위반이 되는 상황이었어요.
+그래서 느낌만 참고하고, 실제로는 오픈 라이선스인 "Send Flowers" 폰트의 글자 윤곽선으로 로고를 다시 그리고, 소용돌이나 별 같은 장식은 직접 벡터로 그렸어요.
+이것도 개입한 사례예요. AI가 레퍼런스를 그대로 베끼지 않게, 라이선스 문제를 먼저 짚고 대체재를 쓴 거죠.</div>
+    <div class="charcount">약 310자 · 70초 기준 적정</div>
+  </div>
+
+  <div class="block green">
+    <div class="head"><h2>슬라이드 6 — 의사결정 사례 3 <span style="font-weight:400">(개입하지 않음)</span></h2><span class="time">~70초</span></div>
+    <div class="script">세 번째는 조금 달라요.
+CLAUDE.md라는 기준 문서를 만들어서 AI한테 이 프로젝트의 역할을 맡기고, 그 이후로는 그 문서 기준으로 판단하게 했어요.
+
+한 번은 주간·월간 기록 기능을 추가하면서 화면이 4개가 될 뻔했는데, AI가 "화면은 3개 이하"라는 규칙을 스스로 짚고 목록 화면 안에 펼침 패널을 두자는 대안을 냈어요. 더 나은 방법이 없어서 그대로 받아들였고요.
+
+또 한 번은 제가 채점 기준을 캡처만 보고 잘못 판단했는데, AI가 원문을 다시 확인해보자고 해서 커밋 해시 같은 증거가 필요하다는 걸 놓치고 있었다는 걸 알게 됐어요.
+
+둘 다 AI가 짚어준 걸 그대로 받아들인 경우라, 이건 개입하지 않은 사례로 분류했어요.</div>
+    <div class="charcount">약 330자 · 70초 기준 적정</div>
+  </div>
+
+  <div class="block">
+    <div class="head"><h2>슬라이드 7 — 결론</h2><span class="time">~30초</span></div>
+    <div class="script">정리하면, 코드 문법처럼 구현 과정은 AI한테 맡기는 게 편했어요.
+하지만 정확히 어떤 앱을 만들고 싶은지 끌어내는 과정이랑, 웹·모바일 화면에서 UI가 일관되게 보이는지 확인하는 건 계속 제 판단이 필요했어요.
+다음에는 "아무것도 모르는 상태"가 필요한 작업은 폴더만 나누는 식으로 흉내 내지 않고, 처음부터 완전히 새 세션에서 시작할 거예요.
+감사합니다.</div>
+    <div class="charcount">약 165자 · 30초 기준 적정</div>
+  </div>
+
+  <div class="block" style="background:rgba(255,253,248,.6)">
+    <div class="head"><h2>리허설 체크리스트</h2></div>
+    <div class="script">□ 전체 소리 내어 한 번 연습하고 실제 걸린 시간 재보기
+□ 슬라이드 4~6에서 발표 시간의 절반 이상(3.5분/7분) 쓰고 있는지 확인
+□ 인용문은 외우지 말고 슬라이드/대본을 보면서 또박또박 읽기
+□ 질의 3분 대비: "왜 그렇게 판단했는지" 각 사례마다 한 문장으로 미리 정리해두기</div>
+  </div>
+</div>
