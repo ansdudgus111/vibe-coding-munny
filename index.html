@@ -83,6 +83,17 @@ label{font-size:14px;display:block;margin:8px 0 4px}
 .back{background:none;border:0;font:inherit;color:var(--sub);cursor:pointer;padding:4px 0;margin-bottom:8px}
 .toast{position:fixed;left:50%;top:16px;transform:translate(-50%,-220%);visibility:hidden;background:var(--pink);border:1.5px solid var(--ink);border-radius:14px;padding:10px 16px;font-size:15px;transition:transform .4s ease,visibility .4s;z-index:30;max-width:92vw;text-align:center}
 .toast.on{transform:translate(-50%,0);visibility:visible}
+.noteOverlay{position:fixed;inset:0;background:rgba(74,74,85,.4);display:flex;align-items:center;justify-content:center;z-index:40;padding:24px}
+.noteOverlay[hidden]{display:none}
+.noteCard{position:relative;max-width:280px;width:100%;background:var(--pink);border:1.5px solid var(--ink);border-radius:3px 18px 5px 20px;padding:32px 18px 18px;box-shadow:0 6px 0 rgba(74,74,85,.18);transform:scale(.001);opacity:0;transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .25s}
+.noteCard.show{transform:scale(1);opacity:1}
+.noteStars{position:absolute;inset:-16px;width:calc(100% + 32px);height:calc(100% + 32px);pointer-events:none;overflow:visible}
+.noteKicker{font-size:12px;color:var(--sub);text-align:center;margin:0 0 12px;position:relative}
+.noteBody{font-size:17px;line-height:1.7;text-align:center;margin:0 0 18px;position:relative}
+.noteRoll{position:fixed;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;z-index:41;animation:rollIn .6s cubic-bezier(.25,.8,.3,1) forwards}
+.noteRoll svg{width:100%;height:100%;display:block}
+@keyframes rollIn{0%{transform:translateX(-62vw) rotate(0deg)}100%{transform:translateX(0) rotate(480deg)}}
+@media (prefers-reduced-motion:reduce){.noteCard{transition:none}.noteRoll{animation:none;display:none}}
 .empty{text-align:center;color:var(--sub);padding:24px 0}
 .hint{font-size:13px;color:var(--sub);text-align:center;margin:12px 0 0;line-height:1.6}
 #list .hint{margin:16px 0 12px}
@@ -131,6 +142,14 @@ label{font-size:14px;display:block;margin:8px 0 4px}
 
 <canvas id="fx" aria-hidden="true"></canvas>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="noteOverlay" id="noteOverlay" hidden role="dialog" aria-modal="true" aria-label="알림 미리보기">
+  <div class="noteCard" id="noteCard">
+    <svg class="noteStars" id="noteStars" viewBox="0 0 240 180" aria-hidden="true"></svg>
+    <p class="noteKicker">다른 창을 보고 있을 때 이 탭이 이렇게 알려줘요. 탭을 닫으면 오지 않아요(미리보기).</p>
+    <p class="noteBody" id="noteBody"></p>
+    <button class="btn full" id="noteClose" type="button">닫기</button>
+  </div>
+</div>
 
 <div class="wrap">
   <h1 class="brand"><span id="logo" aria-hidden="true"></span><svg class="wm" viewBox="-230 -735 2950 1010" role="img" aria-label="Starmp"><path d="M219 50Q122 50 55 4Q-20 -49 -20 -141Q-20 -211 34 -263Q89 -316 157 -316Q201 -316 232.5 -289.5Q264 -263 264 -218Q264 -202 247 -202Q236 -202 230 -222Q221 -251 212 -260Q196 -281 159 -281Q103 -281 58 -239Q14 -197 14 -142Q14 -66 77 -22Q133 16 216 16Q272 16 320.5 2.5Q369 -11 410 -39Q499 -101 499 -196Q499 -293 406 -339L235 -402Q143 -443 143 -528Q143 -611 218 -660Q283 -702 368 -702Q433 -702 478 -669Q529 -632 529 -567Q529 -526 498 -498Q469 -470 427 -470Q402 -470 385 -485Q368 -500 368 -525Q368 -542 385 -542Q397 -542 403 -519Q407 -503 428 -503Q451 -503 472.5 -521.5Q494 -540 494 -567Q494 -618 454 -645Q419 -668 364 -668Q296 -668 240 -633Q177 -593 177 -531Q177 -460 269 -424L441 -358Q533 -305 533 -197Q533 -85 435 -14Q346 50 219 50ZM623 13Q546 13 546 -111Q546 -215 591 -366H559Q543 -366 543 -383Q543 -400 559 -400H602Q615 -439 629 -473Q643 -507 658 -535Q703 -622 746 -622Q780 -622 780 -568Q780 -539 770 -506Q763 -483 754 -456.5Q745 -430 733 -400H782Q799 -400 799 -383Q799 -366 782 -366H717Q666 -252 582 -138Q581 -130 581 -122.5Q581 -115 581 -108Q581 -19 631 -19Q670 -19 700.5 -47Q731 -75 756 -117Q766 -134 773 -140Q780 -146 784 -146Q796 -146 796 -131Q796 -129 793.5 -121.5Q791 -114 789 -112Q760 -57 718 -22Q676 13 623 13ZM639 -400H694Q710 -435 720.5 -462Q731 -489 737 -508Q745 -538 745 -558Q745 -580 736 -580Q720 -580 691 -526Q678 -501 665 -469.5Q652 -438 639 -400ZM590 -204Q613 -242 635 -282.5Q657 -323 678 -366H628Q615 -326 605.5 -285.5Q596 -245 590 -204ZM1104 7Q1067 7 1042 -15.5Q1017 -38 1021 -81Q960 6 874 6Q819 6 792 -37Q770 -71 770 -129Q770 -140 771 -151.5Q772 -163 774 -174Q781 -214 801 -251.5Q821 -289 853 -326Q925 -407 1002 -407Q1043 -407 1070 -383.5Q1097 -360 1097 -318Q1097 -301 1088 -285Q1109 -284 1105 -266L1073 -175Q1057 -130 1057 -93Q1057 -59 1071.5 -40Q1086 -21 1111 -21Q1125 -21 1142 -29Q1159 -37 1181 -56Q1196 -69 1209.5 -85Q1223 -101 1233 -117Q1239 -126 1246 -134.5Q1253 -143 1260 -143Q1272 -143 1272 -130Q1272 -125 1270.5 -120.5Q1269 -116 1267 -114Q1254 -93 1238 -73Q1222 -53 1204 -36Q1180 -14 1154 -3.5Q1128 7 1104 7ZM804 -124Q804 -28 878 -28Q941 -28 987 -88Q1001 -107 1016 -136Q1031 -165 1045 -204Q1049 -214 1053.5 -227.5Q1058 -241 1065 -258Q1045 -243 1024 -243Q988 -243 988 -263Q988 -280 1005 -280Q1008 -280 1013.5 -278.5Q1019 -277 1022 -277Q1037 -277 1050 -290Q1063 -303 1063 -318Q1063 -373 1001 -373Q939 -373 877 -301Q818 -235 808 -168Q806 -157 805 -146Q804 -135 804 -124ZM1501 10Q1468 10 1446.5 -14.5Q1425 -39 1425 -85Q1425 -169 1496 -300Q1466 -289 1442 -289Q1393 -289 1356 -329Q1350 -296 1334.5 -256.5Q1319 -217 1301 -179.5Q1283 -142 1267 -114Q1263 -106 1257 -104Q1251 -102 1248 -102Q1233 -102 1233 -117Q1253 -149 1273 -191.5Q1293 -234 1310.5 -281Q1328 -328 1337 -372Q1331 -396 1331 -426Q1331 -475 1353 -475Q1377 -475 1377 -426Q1377 -415 1375.5 -401Q1374 -387 1372 -371Q1376 -350 1397.5 -337Q1419 -324 1443 -324Q1477 -324 1530 -359Q1541 -367 1543 -367Q1562 -367 1562 -349Q1562 -347 1561.5 -345Q1561 -343 1560 -341Q1535 -298 1515 -258.5Q1495 -219 1480 -181Q1460 -130 1460 -88Q1460 -24 1502 -24Q1535 -24 1562.5 -53.5Q1590 -83 1612 -117Q1617 -125 1626.5 -138Q1636 -151 1643 -151Q1648 -151 1650.5 -149Q1653 -147 1653 -139Q1653 -134 1650.5 -125Q1648 -116 1646 -114Q1619 -65 1584.5 -27.5Q1550 10 1501 10ZM2096 9Q2019 9 2019 -65Q2019 -112 2068 -244Q2090 -304 2090 -324Q2090 -365 2058 -365Q2023 -365 1990 -331Q1935 -276 1903 -216Q1885 -181 1859 -116Q1845 -79 1834 -53.5Q1823 -28 1816 -12Q1811 -4 1804 -4Q1796 -4 1788.5 -9.5Q1781 -15 1781 -21Q1781 -27 1796 -60Q1872 -236 1872 -303Q1872 -356 1836 -356Q1796 -356 1757 -311Q1702 -250 1670 -168Q1657 -128 1643.5 -89Q1630 -50 1617 -10Q1613 0 1604 0Q1584 0 1584 -19L1641 -200Q1674 -307 1674 -386Q1674 -403 1692 -403Q1708 -403 1708 -381Q1708 -362 1706 -340.5Q1704 -319 1700 -296Q1709 -309 1717.5 -320Q1726 -331 1734 -339Q1788 -393 1844 -393Q1909 -393 1909 -301V-288Q1926 -314 1943.5 -333.5Q1961 -353 1980 -366Q2030 -402 2067 -402Q2127 -402 2127 -325Q2127 -302 2103 -237Q2086 -191 2070 -144Q2054 -97 2054 -70Q2054 -26 2095 -26Q2131 -26 2166.5 -54.5Q2202 -83 2225 -117Q2227 -121 2235 -131.5Q2243 -142 2248 -142Q2265 -142 2265 -128Q2265 -126 2263 -121Q2261 -116 2259 -114Q2244 -83 2216 -54.5Q2188 -26 2156.5 -8.5Q2125 9 2096 9ZM2156 246Q2118 246 2118 195Q2118 147 2152 58Q2163 29 2187 -25Q2211 -79 2249 -159Q2263 -186 2276.5 -215.5Q2290 -245 2295 -274Q2316 -390 2338 -423Q2348 -439 2360 -439Q2368 -439 2373 -433Q2378 -427 2378 -419Q2378 -407 2365 -407Q2361 -407 2349 -361Q2347 -353 2344 -343Q2341 -333 2339 -322Q2395 -387 2466 -387Q2527 -387 2561 -342Q2592 -302 2592 -239Q2592 -144 2515 -62Q2439 19 2343 19Q2298 19 2281 -1Q2232 246 2156 246ZM2336 -14Q2421 -14 2488 -84Q2557 -155 2557 -238Q2557 -287 2536 -318Q2512 -353 2467 -353Q2422 -353 2381 -316Q2361 -297 2346 -276.5Q2331 -256 2323 -233Q2323 -233 2312 -173Q2307 -140 2301.5 -106.5Q2296 -73 2289 -39H2290Q2301 -39 2308 -24Q2312 -14 2336 -14ZM2160 213Q2169 213 2184 189Q2202 160 2217 116Q2244 34 2268 -119Q2237 -49 2213.5 6.5Q2190 62 2175 104Q2155 160 2154 190Q2154 213 2160 213Z" fill="#4A4A55"/><path d="M-14 -120 L-17.4 -125.2 L-21.1 -130 L-25.1 -134.6 L-29.4 -138.9 L-33.9 -142.9 L-38.7 -146.6 L-43.7 -149.9 L-48.8 -152.8 L-54.2 -155.4 L-59.6 -157.5 L-65.2 -159.3 L-70.8 -160.8 L-76.5 -161.8 L-82.2 -162.4 L-87.9 -162.7 L-93.6 -162.6 L-99.2 -162 L-104.7 -161.2 L-110.1 -159.9 L-115.4 -158.3 L-120.6 -156.4 L-125.6 -154.1 L-130.4 -151.5 L-134.9 -148.6 L-139.3 -145.4 L-143.4 -142 L-147.2 -138.3 L-150.7 -134.4 L-154 -130.3 L-157 -126 L-159.6 -121.5 L-161.9 -116.9 L-163.9 -112.2 L-165.5 -107.4 L-166.9 -102.5 L-167.8 -97.6 L-168.5 -92.7 L-168.8 -87.7 L-168.7 -82.8 L-168.4 -78 L-167.7 -73.2 L-166.7 -68.4 L-165.4 -63.8 L-163.7 -59.4 L-161.8 -55 L-159.7 -50.9 L-157.2 -46.9 L-154.6 -43.2 L-151.7 -39.6 L-148.6 -36.3 L-145.3 -33.2 L-141.8 -30.4 L-138.1 -27.8 L-134.4 -25.5 L-130.5 -23.5 L-126.5 -21.7 L-122.4 -20.3 L-118.3 -19.1 L-114.1 -18.2 L-109.9 -17.6 L-105.7 -17.3 L-101.6 -17.3 L-97.4 -17.6 L-93.4 -18.1 L-89.4 -18.9 L-85.5 -20 L-81.7 -21.3 L-78.1 -22.9 L-74.6 -24.7 L-71.3 -26.7 L-68.1 -28.9 L-65.1 -31.3 L-62.3 -33.9 L-59.7 -36.6 L-57.3 -39.5 L-55.2 -42.5 L-53.2 -45.6 L-51.6 -48.8 L-50.1 -52.1 L-48.9 -55.5 L-47.9 -58.9 L-47.2 -62.3 L-46.7 -65.7 L-46.4 -69.2 L-46.4 -72.6 L-46.6 -75.9 L-47 -79.3 L-47.7 -82.5 L-48.5 -85.7 L-49.6 -88.7 L-50.9 -91.7 L-52.3 -94.5 L-54 -97.2 L-55.7 -99.8 L-57.7 -102.2 L-59.7 -104.4 L-61.9 -106.5 L-64.2 -108.3 L-66.7 -110 L-69.1 -111.6 L-71.7 -112.9 L-74.3 -114 L-77 -115 L-79.7 -115.7 L-82.4 -116.3 L-85.1 -116.6 L-87.7 -116.8 L-90.4 -116.8 L-93 -116.6 L-95.6 -116.2 L-98.1 -115.7 L-100.5 -115 L-102.9 -114.1 L-105.1 -113.1 L-107.2 -111.9 L-109.3 -110.7 L-111.2 -109.3 L-113 -107.8 L-114.6 -106.2 L-116.1 -104.5 L-117.5 -102.7 L-118.7 -100.9 L-119.8 -99 L-120.7 -97 L-121.5 -95.1 L-122.1 -93.1 L-122.6 -91.1 L-122.9 -89.1 L-123.1 -87.2 L-123.1 -85.2 L-123 -83.3 L-122.8 -81.4 L-122.5 -79.6 L-122 -77.9 L-121.4 -76.2 L-120.7 -74.6 L-119.9 -73 L-119 -71.6 L-118 -70.3 L-117 -69 L-115.9 -67.9 L-114.7 -66.8 L-113.5 -65.9 L-112.2 -65.1 L-110.9 -64.4 L-109.6 -63.8 L-108.3 -63.3 L-107 -62.9 L-105.6 -62.6 L-104.3 -62.5" fill="none" stroke="#4A4A55" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/><path d="M2366 -424 L2368 -430.5 L2369.5 -437.2 L2370.6 -443.8 L2371.1 -450.5 L2371.2 -457.2 L2370.8 -463.9 L2370 -470.4 L2368.6 -476.9 L2366.9 -483.2 L2364.7 -489.3 L2362 -495.2 L2359 -500.9 L2355.6 -506.3 L2351.8 -511.4 L2347.7 -516.2 L2343.3 -520.7 L2338.7 -524.8 L2333.7 -528.6 L2328.6 -532 L2323.2 -535 L2317.7 -537.5 L2312 -539.7 L2306.2 -541.4 L2300.4 -542.7 L2294.5 -543.6 L2288.6 -544.1 L2282.7 -544.1 L2276.9 -543.7 L2271.2 -542.9 L2265.5 -541.7 L2260 -540.1 L2254.7 -538.1 L2249.5 -535.8 L2244.6 -533.1 L2239.9 -530.1 L2235.4 -526.8 L2231.3 -523.2 L2227.4 -519.3 L2223.8 -515.2 L2220.6 -510.9 L2217.7 -506.4 L2215.2 -501.7 L2213 -496.9 L2211.2 -492 L2209.7 -487 L2208.6 -481.9 L2207.9 -476.8 L2207.6 -471.7 L2207.6 -466.7 L2208 -461.7 L2208.7 -456.7 L2209.8 -451.9 L2211.2 -447.2 L2212.9 -442.6 L2215 -438.2 L2217.3 -434 L2220 -430 L2222.8 -426.3 L2225.9 -422.8 L2229.3 -419.5 L2232.8 -416.5 L2236.5 -413.8 L2240.4 -411.4 L2244.4 -409.3 L2248.5 -407.5 L2252.7 -406 L2256.9 -404.9 L2261.2 -404 L2265.5 -403.5 L2269.8 -403.2 L2274 -403.3 L2278.2 -403.7 L2282.4 -404.4 L2286.4 -405.4 L2290.3 -406.6 L2294.1 -408.1 L2297.7 -409.9 L2301.2 -411.9 L2304.4 -414.2 L2307.5 -416.6 L2310.4 -419.2 L2313 -422 L2315.4 -425 L2317.6 -428.1 L2319.5 -431.3 L2321.2 -434.6 L2322.6 -438 L2323.7 -441.5 L2324.6 -445 L2325.2 -448.5 L2325.5 -452 L2325.6 -455.5 L2325.5 -458.9 L2325.1 -462.3 L2324.4 -465.6 L2323.6 -468.8 L2322.5 -472 L2321.2 -475 L2319.7 -477.8 L2318 -480.5 L2316.1 -483.1 L2314.1 -485.5 L2312 -487.7 L2309.7 -489.7 L2307.3 -491.5 L2304.8 -493.1 L2302.2 -494.5 L2299.6 -495.7 L2296.9 -496.7 L2294.2 -497.5 L2291.4 -498.1 L2288.7 -498.5 L2286 -498.6 L2283.3 -498.6 L2280.7 -498.4 L2278.1 -498 L2275.6 -497.4 L2273.2 -496.6 L2270.9 -495.6 L2268.6 -494.6 L2266.5 -493.3 L2264.6 -492 L2262.8 -490.5 L2261.1 -488.9 L2259.5 -487.2 L2258.1 -485.4 L2256.9 -483.6 L2255.8 -481.7 L2254.9 -479.8 L2254.2 -477.8 L2253.6 -475.8 L2253.2 -473.8 L2252.9 -471.8 L2252.8 -469.9 L2252.8 -467.9 L2253 -466.1 L2253.3 -464.2 L2253.7 -462.5 L2254.3 -460.8 L2255 -459.2 L2255.8 -457.6 L2256.6 -456.2 L2257.6 -454.9 L2258.7 -453.7 L2259.8 -452.6 L2261 -451.6 L2262.2 -450.7 L2263.4 -450 L2264.7 -449.3 L2266 -448.8" fill="none" stroke="#4A4A55" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/><circle cx="1850" cy="-545" r="104" fill="none" stroke="#4A4A55" stroke-width="9" stroke-dasharray="6 22" stroke-linecap="round"/><path d="M1842.6 -598.7Q1850 -611 1857.4 -598.7L1864.3 -587.2Q1871.7 -574.9 1885.7 -571.7L1898.8 -568.6Q1912.8 -565.4 1903.4 -554.6L1894.5 -544.4Q1885.2 -533.6 1886.4 -519.3L1887.6 -505.9Q1888.8 -491.6 1875.6 -497.2L1863.2 -502.5Q1850 -508 1836.8 -502.5L1824.4 -497.2Q1811.2 -491.6 1812.4 -505.9L1813.6 -519.3Q1814.8 -533.6 1805.5 -544.4L1796.6 -554.6Q1787.2 -565.4 1801.2 -568.6L1814.3 -571.7Q1828.3 -574.9 1835.7 -587.2Z" fill="#F7E3A1" stroke="#4A4A55" stroke-width="14" stroke-linejoin="round"/><path d="M2640 -460Q2640 -430 2670 -430Q2640 -430 2640 -400Q2640 -430 2610 -430Q2640 -430 2640 -460Z" fill="#F6C9D6" stroke="#4A4A55" stroke-width="8" stroke-linejoin="round"/><path d="M1560 -672Q1560 -650 1582 -650Q1560 -650 1560 -628Q1560 -650 1538 -650Q1560 -650 1560 -672Z" fill="#BFD3EE" stroke="#4A4A55" stroke-width="8" stroke-linejoin="round"/></svg></h1>
@@ -156,6 +175,10 @@ label{font-size:14px;display:block;margin:8px 0 4px}
       <p class="hint l" id="fColorHint">별사탕이 이 색 계열로 만들어져요.</p>
       <label for="fRem">알림 (선택)</label>
       <select id="fRem"></select>
+      <div class="row" id="fRemEveryRow" hidden style="margin-bottom:8px">
+        <input id="fRemEvery" type="number" min="5" max="999" value="30" aria-label="알림 주기 값" style="margin-bottom:0">
+        <select id="fRemUnit" aria-label="알림 주기 단위" style="margin-bottom:0"><option value="sec">초마다</option><option value="min" selected>분마다</option></select>
+      </div>
       <input id="fRemTime" type="time" value="20:00" aria-label="알림 시각" hidden>
       <p class="hint l">알림은 이 탭이 열려 있는 동안에만 와요.</p>
       <div class="row" style="margin-top:8px">
@@ -181,7 +204,12 @@ label{font-size:14px;display:block;margin:8px 0 4px}
     <div class="panel">
       <label for="jRem" style="margin-top:0">이 과제 알림</label>
       <select id="jRem"></select>
+      <div class="row" id="jRemEveryRow" hidden style="margin-bottom:8px">
+        <input id="jRemEvery" type="number" min="5" max="999" value="30" aria-label="알림 주기 값" style="margin-bottom:0">
+        <select id="jRemUnit" aria-label="알림 주기 단위" style="margin-bottom:0"><option value="sec">초마다</option><option value="min" selected>분마다</option></select>
+      </div>
       <input id="jRemTime" type="time" value="20:00" aria-label="알림 시각" hidden>
+      <button class="btn ghost full" id="jRemPreview" type="button" style="margin-bottom:8px">🔔 알림 미리보기</button>
       <label>프로젝트 색</label>
       <div class="swatches" id="jColor" role="group" aria-label="프로젝트 색"></div>
     </div>
@@ -204,7 +232,7 @@ label{font-size:14px;display:block;margin:8px 0 4px}
 const KEY="star-jar-v1";
 /* 프로젝트 색: 색마다 같은 계열의 별사탕 팔레트가 만들어져요 (믹스는 예전 알록달록한 별사탕) */
 const PRESETS=[{k:"pink",n:"핑크",h:340},{k:"peach",n:"복숭아",h:18},{k:"butter",n:"버터",h:46},{k:"lime",n:"연두",h:95},{k:"mint",n:"민트",h:160},{k:"sky",n:"하늘",h:208},{k:"lav",n:"라벤더",h:265}];
-const DATA_VERSION=2; // 저장 구조를 바꿀 때 올리고, migrateState에서 옛 데이터를 변환해요
+const DATA_VERSION=3; // 저장 구조를 바꿀 때 올리고, migrateState에서 옛 데이터를 변환해요 (v3: remind에 unit(분/초) 추가)
 let state={version:DATA_VERSION,tasks:[],lastOpened:null,settings:{mute:false}};
 function normalizeTask(t){
   const steps=(Array.isArray(t.steps)?t.steps:[]).slice(0,5).map(x=>({text:String((x&&x.text)||"").slice(0,60),done:!!(x&&x.done),doneAt:(x&&x.doneAt)||null}));
@@ -618,7 +646,7 @@ function renderReview(){
 function addStepInput(val=""){
   const box=$("#fSteps");if(box.children.length>=5)return;
   const i=document.createElement("input");i.placeholder=`단계 ${box.children.length+1}`;i.setAttribute("aria-label",`단계 ${box.children.length+1}`);i.maxLength=60;i.value=val;box.appendChild(i)}
-function resetForm(){$("#fTitle").value="";$("#fDue").value="";$("#fSteps").innerHTML="";for(let i=0;i<3;i++)addStepInput();$("#err").textContent="";pickFormColor(nextColor());$("#fRem").value="off";$("#fRemTime").hidden=true;$("#fRemTime").value="20:00";$("#tplHint").textContent="유형을 누르면 단계 초안이 채워져요. 직접 적어도 돼요.";document.querySelectorAll("#tpl .chip").forEach(x=>x.classList.remove("on"))}
+function resetForm(){$("#fTitle").value="";$("#fDue").value="";$("#fSteps").innerHTML="";for(let i=0;i<3;i++)addStepInput();$("#err").textContent="";pickFormColor(nextColor());$("#fRem").value="off";$("#fRemTime").hidden=true;$("#fRemTime").value="20:00";$("#fRemEveryRow").hidden=true;$("#fRemEvery").value=30;$("#fRemUnit").value="min";$("#tplHint").textContent="유형을 누르면 단계 초안이 채워져요. 직접 적어도 돼요.";document.querySelectorAll("#tpl .chip").forEach(x=>x.classList.remove("on"))}
 $("#addStep").onclick=()=>{if($("#fSteps").children.length>=5){$("#err").textContent="단계는 최대 5개예요.";return}addStepInput();$("#err").textContent=""};
 $("#save").onclick=()=>{
   const title=$("#fTitle").value.trim(),due=$("#fDue").value;
@@ -626,7 +654,7 @@ $("#save").onclick=()=>{
   if(!title)return $("#err").textContent="과제 이름을 적어주세요.";
   if(!due)return $("#err").textContent="마감일을 골라주세요.";
   if(steps.length<3)return $("#err").textContent="단계를 3개 이상 적어주세요. 작게 쪼갤수록 쉬워져요.";
-  const t={id:uid(),title,due,steps:steps.map(text=>({text,done:false})),createdAt:new Date().toISOString(),completedAt:null,reflection:"",remind:readRem($("#fRem"),$("#fRemTime")),color:fColor};
+  const t={id:uid(),title,due,steps:steps.map(text=>({text,done:false})),createdAt:new Date().toISOString(),completedAt:null,reflection:"",remind:readRem($("#fRem"),$("#fRemTime"),$("#fRemEvery"),$("#fRemUnit")),color:fColor};
   lastRemindAt[t.id]=Date.now();
   state.tasks.push(t);save();resetForm();
   renderList();openTask(t.id);
@@ -639,7 +667,7 @@ function openTask(id){
   if(jarScene)jarScene.destroy();
   show("s2");
   jarScene=mountScene($("#jar"));
-  showRem($("#jRem"),$("#jRemTime"),current.remind);
+  showRem($("#jRem"),$("#jRemTime"),$("#jRemEvery"),$("#jRemUnit"),$("#jRemEveryRow"),current.remind);
   jarScene.setPalette(paletteFor(current));
   renderSwatches($("#jColor"),current.color,pickJarColor);
   syncJar(false);
@@ -720,33 +748,83 @@ document.querySelectorAll("#tpl .chip").forEach(b=>b.onclick=()=>{
 
 /* ---- 알림: 과제마다 설정 (탭이 열려 있을 때만) ---- */
 const REM={
-  soft:["'{title}', 별 하나만 모아볼까요? '{next}'부터요.","잠깐 숨 돌렸나요? '{next}'가 기다리고 있어요.","오늘은 별 하나면 충분해요. '{next}' 어때요?","10분만 해볼까요? '{title}'의 '{next}'예요."],
+  soft:["'{title}', 별 하나만 모아볼까요? '{next}'부터요.","잠깐 숨 돌렸나요? '{next}'가 기다리고 있어요.","오늘은 별 하나면 충분해요. '{next}' 어때요?","10분만 해볼까요? '{title}'의 '{next}'예요.","'{title}'이 기다리고 있어요. '{next}'부터 조금씩 시작해볼까요?"],
   late:["'{title}'이 밀렸어도 괜찮아요. '{next}'부터 작게요.","늦었어도 별은 모을 수 있어요. '{next}' 하나만요."]
 };
-const REM_OPTS='<option value="off">받지 않기</option><option value="every:30">30분마다</option><option value="every:60">1시간마다</option><option value="every:120">2시간마다</option><option value="daily">매일 정해진 시각에</option>';
-const remToValue=r=>(!r||r.mode==="off")?"off":(r.mode==="every"?`every:${r.every}`:"daily");
-function readRem(sel,time){const v=sel.value;
+const REM_OPTS='<option value="off">받지 않기</option><option value="every">주기마다</option><option value="daily">매일 정해진 시각에</option>';
+function readRem(sel,time,everyInput,unitSel){const v=sel.value;
   if(v==="off")return{mode:"off"};
   if(v==="daily")return{mode:"daily",time:time.value||"20:00",lastDaily:null};
-  return{mode:"every",every:+v.split(":")[1]}}
-function showRem(sel,time,r){sel.value=remToValue(r);time.hidden=sel.value!=="daily";time.value=(r&&r.time)||"20:00"}
+  return cleanRem({mode:"every",every:everyInput.value,unit:unitSel.value})}
+function showRem(sel,time,everyInput,unitSel,everyRow,r){
+  const mode=(r&&r.mode)||"off";
+  sel.value=mode;time.hidden=mode!=="daily";time.value=(r&&r.time)||"20:00";
+  everyRow.hidden=mode!=="every";everyInput.value=(mode==="every"&&r.every)||30;unitSel.value=(mode==="every"&&r.unit)||"min"}
 async function askNotifPerm(){if(typeof Notification!=="undefined"&&Notification.permission==="default"){try{await Notification.requestPermission()}catch(e){}}}
 function cleanRem(r){
   if(!r||typeof r!=="object")return{mode:"off"};
-  if(r.mode==="every"&&[30,60,120].includes(+r.every))return{mode:"every",every:+r.every};
+  if(r.mode==="every"){
+    let every=Math.round(+r.every);if(!Number.isFinite(every))every=30;
+    every=Math.min(999,Math.max(5,every));
+    return{mode:"every",every,unit:r.unit==="sec"?"sec":"min"}}
   if(r.mode==="daily"&&/^\d{2}:\d{2}$/.test(r.time||""))return{mode:"daily",time:r.time,lastDaily:r.lastDaily||null};
   return{mode:"off"}}
-function remLabel(r){return r.mode==="every"?({30:"30분마다",60:"1시간마다",120:"2시간마다"}[r.every]||`${r.every}분마다`):`매일 ${r.time}`}
+function remLabel(r){return r.mode==="every"?`${r.every}${r.unit==="sec"?"초":"분"}마다`:`매일 ${r.time}`}
 
 $("#fRem").innerHTML=REM_OPTS;$("#jRem").innerHTML=REM_OPTS;
-$("#fRem").onchange=()=>{$("#fRemTime").hidden=$("#fRem").value!=="daily";if($("#fRem").value!=="off")askNotifPerm()};
-$("#jRem").onchange=()=>{
-  $("#jRemTime").hidden=$("#jRem").value!=="daily";
+$("#fRem").onchange=()=>{
+  const v=$("#fRem").value;
+  $("#fRemTime").hidden=v!=="daily";$("#fRemEveryRow").hidden=v!=="every";
+  if(v!=="off")askNotifPerm()};
+function applyJRem(){
   if(!current)return;
-  current.remind=readRem($("#jRem"),$("#jRemTime"));lastRemindAt[current.id]=Date.now();save();
+  current.remind=readRem($("#jRem"),$("#jRemTime"),$("#jRemEvery"),$("#jRemUnit"));
+  lastRemindAt[current.id]=Date.now();save();
   if(current.remind.mode!=="off"){askNotifPerm();toast(`알림을 바꿨어요: ${remLabel(current.remind)}`)}else toast("이 과제 알림을 껐어요.");
+}
+$("#jRem").onchange=()=>{
+  const v=$("#jRem").value;
+  $("#jRemTime").hidden=v!=="daily";$("#jRemEveryRow").hidden=v!=="every";
+  applyJRem();
 };
-$("#jRemTime").onchange=$("#jRem").onchange;
+$("#jRemTime").onchange=applyJRem;
+$("#jRemEvery").onchange=applyJRem;
+$("#jRemUnit").onchange=applyJRem;
+
+/* ---- 알림 미리보기 (쪽지 모달, 화면은 늘리지 않음) ---- */
+function notePreviewMessage(t){
+  const nx=t.steps.find(x=>!x.done);
+  if(!nx)return`'${t.title}' 단계를 모두 모았어요. 오늘은 충분해요.`;
+  const arr=dDiff(t.due)<0?REM.late:REM.soft;
+  return arr[Math.floor(Math.random()*arr.length)].replace(/\{title\}/g,t.title).replace(/\{next\}/g,nx.text);
+}
+function renderNoteStars(t){
+  const pal=paletteFor(t),fills=pal.fill;
+  const pos=[[18,16],[222,20],[16,162],[224,160],[120,12],[120,168],[40,90],[200,90]];
+  $("#noteStars").innerHTML=pos.map((p,i)=>`<path d="${roundStar(p[0],p[1],10)}" fill="${fills[i%fills.length]}" stroke="${INK}" stroke-width="1.1" stroke-linejoin="round" opacity=".9"/>`).join("");
+}
+function closeNotePreview(){$("#noteOverlay").hidden=true;$("#noteCard").classList.remove("show");$("#noteOverlay").querySelectorAll(".noteRoll").forEach(x=>x.remove())}
+$("#jRemPreview").onclick=()=>{
+  if(!current)return;
+  renderNoteStars(current);
+  $("#noteBody").textContent=notePreviewMessage(current);
+  $("#noteCard").classList.remove("show");
+  $("#noteOverlay").hidden=false;
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduce){$("#noteCard").classList.add("show");return}
+  const fill=paletteFor(current).fill[0];
+  const roll=document.createElement("div");
+  roll.className="noteRoll";roll.setAttribute("aria-hidden","true");
+  roll.innerHTML=`<svg viewBox="0 0 40 40"><path d="${roundStar(20,20,17)}" fill="${fill}" stroke="${INK}" stroke-width="1.3" stroke-linejoin="round"/></svg>`;
+  $("#noteOverlay").appendChild(roll);
+  let landed=false;
+  const land=()=>{if(landed)return;landed=true;roll.remove();$("#noteCard").classList.add("show")};
+  roll.addEventListener("animationend",land,{once:true});
+  setTimeout(land,750);
+};
+$("#noteClose").onclick=closeNotePreview;
+$("#noteOverlay").addEventListener("click",e=>{if(e.target.id==="noteOverlay")closeNotePreview()});
+addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#noteOverlay").hidden)closeNotePreview()});
 
 const loadTime=Date.now(),lastRemindAt={};
 let lastInteract=Date.now();
@@ -759,7 +837,8 @@ function remindTick(force){
     const r=t.remind;if(t.completedAt||!r||r.mode==="off")continue;
     if(r.mode==="every"){
       const last=lastRemindAt[t.id]!==undefined?lastRemindAt[t.id]:loadTime;
-      if(force||ms-last>=r.every*60000)due.push(t);
+      const everyMs=r.every*(r.unit==="sec"?1000:60000);
+      if(force||ms-last>=everyMs)due.push(t);
     }else if(r.mode==="daily"){
       const [hh,mm]=(r.time||"20:00").split(":").map(Number),target=new Date(now);target.setHours(hh,mm,0,0);
       const diff=ms-target.getTime();
@@ -780,7 +859,7 @@ function remindTick(force){
   for(const x of due){lastRemindAt[x.id]=ms;if(x.remind.mode==="daily")x.remind.lastDaily=toDS(now)}
   save();return true;
 }
-setInterval(()=>remindTick(false),30000);
+setInterval(()=>remindTick(false),1000);
 
 /* ---- 제목 옆 로고 ---- */
 $("#logo").innerHTML=`<svg width="36" height="36" viewBox="0 0 40 40"><g fill="#fffdf8" stroke="${INK}" stroke-width="1.2"><circle cx="13" cy="23" r="7"/><circle cx="27" cy="23" r="7"/><circle cx="16" cy="16" r="7.5"/><circle cx="24" cy="16" r="7.5"/><circle cx="20" cy="27" r="7"/></g>
