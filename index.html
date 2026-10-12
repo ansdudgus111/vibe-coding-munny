@@ -43,7 +43,7 @@ label{font-size:14px;display:block;margin:8px 0 4px}
 .swAct.edit{background:var(--sky)}
 .swAct.del{background:var(--pink);border-radius:0 13px 14px 0}
 .swipeFront{display:flex;gap:6px;position:relative;z-index:1;background:var(--paper);transition:transform .2s ease;touch-action:pan-y}
-.more{font:inherit;font-size:18px;line-height:1;color:var(--sub);background:rgba(255,255,255,.75);border:1.5px solid var(--ink);border-radius:11px;padding:0 10px;cursor:pointer;flex:none}
+.swMore{font:inherit;font-size:18px;line-height:1;color:var(--sub);background:rgba(255,255,255,.75);border:1.5px solid var(--ink);border-radius:11px;padding:0 10px;cursor:pointer;flex:none}
 @media (prefers-reduced-motion:reduce){.swipeFront{transition:none}}
 .item small{color:var(--sub);display:block}
 .mini{display:flex;gap:2px;flex-wrap:wrap;max-width:70px;justify-content:flex-end}
@@ -585,7 +585,7 @@ function renderList(){
     </div>
     <div class="swipeFront" data-front="${t.id}">
       <button class="item" data-id="${t.id}"><div style="flex:1"><div><span class="dot" style="background:${swatchBg(t.color)}"></span>${esc(t.title)}</div><small>${ddText(dDiff(t.due))} · ${pctOf(t)}%</small></div><div class="mini">${miniStars(t)}</div></button>
-      <button class="more" data-id="${t.id}" aria-label="${esc(t.title)} 더 보기" aria-expanded="false">⋮</button>
+      <button class="swMore" data-id="${t.id}" aria-label="${esc(t.title)} 더 보기" aria-expanded="false">⋮</button>
     </div>
   </div>`).join("");
   $("#list").innerHTML=h;
@@ -594,7 +594,7 @@ function renderList(){
     if(row.classList.contains("open")){closeSwipe(row);return}
     openTask(b.dataset.id);
   });
-  document.querySelectorAll(".more").forEach(b=>b.onclick=e=>{e.stopPropagation();toggleSwipe(b.closest(".swipeRow"))});
+  document.querySelectorAll(".swMore").forEach(b=>b.onclick=e=>{e.stopPropagation();toggleSwipe(b.closest(".swipeRow"))});
   document.querySelectorAll('[data-act="edit"]').forEach(b=>b.onclick=()=>openTask(b.dataset.id));
   document.querySelectorAll('[data-act="del"]').forEach(b=>b.onclick=()=>{
     const t=state.tasks.find(x=>x.id===b.dataset.id);
@@ -609,7 +609,7 @@ function toggleSwipe(row,open){
   const front=row.querySelector(".swipeFront");
   row.classList.toggle("open",willOpen);
   front.style.transform=willOpen?`translateX(-${SWIPE_W}px)`:"translateX(0)";
-  row.querySelector(".more").setAttribute("aria-expanded",String(willOpen));
+  row.querySelector(".swMore").setAttribute("aria-expanded",String(willOpen));
   row.querySelector(".swipeActions").setAttribute("aria-hidden",String(!willOpen));
   row.querySelectorAll(".swAct").forEach(b=>b.tabIndex=willOpen?0:-1);
   if(willOpen)row.querySelector(".swAct.edit").focus();
@@ -619,7 +619,7 @@ function wireSwipe(){
   document.querySelectorAll(".swipeFront").forEach(front=>{
     let sx=0,dx=0,dragging=false,startOpen=false;
     front.addEventListener("pointerdown",e=>{
-      if(e.target.closest(".more"))return;
+      if(e.target.closest(".swMore"))return;
       dragging=true;sx=e.clientX;dx=0;startOpen=front.closest(".swipeRow").classList.contains("open");
       front.style.transition="none";
       try{front.setPointerCapture(e.pointerId)}catch(err){}
