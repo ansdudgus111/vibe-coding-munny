@@ -801,7 +801,7 @@ function notePreviewMessage(t){
 function renderNoteStars(t){
   const pal=paletteFor(t),fills=pal.fill;
   const pos=[[18,16],[222,20],[16,162],[224,160],[120,12],[120,168],[40,90],[200,90]];
-  $("#noteStars").innerHTML=pos.map((p,i)=>`<path d="${roundStar(p[0],p[1],10)}" fill="${fills[i%fills.length]}" stroke="${INK}" stroke-width="1.1" stroke-linejoin="round" opacity=".9"/>`).join("");
+  $("#noteStars").innerHTML=pos.map((p,i)=>`<path d="${roundStar(p[0],p[1],10)}" fill="${fills[i%fills.length]}" stroke="${INK}" stroke-width="1.1" stroke-linejoin="round" opacity=".45"/>`).join("");
 }
 function closeNotePreview(){$("#noteOverlay").hidden=true;$("#noteCard").classList.remove("show");$("#noteOverlay").querySelectorAll(".noteRoll").forEach(x=>x.remove())}
 $("#jRemPreview").onclick=()=>{
