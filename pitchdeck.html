@@ -1,0 +1,246 @@
+<title>Starmp — 발표 자료</title>
+<style>
+:root{
+  --paper:#FFFDF8;--pink:#F6C9D6;--sky:#BFD3EE;--green:#CFE3B0;--butter:#F7E3A1;
+  --ink:#4A4A55;--sub:#666673;--pink-deep:#EBA9BD;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Apple SD Gothic Neo","Noto Sans KR",-apple-system,sans-serif;
+  color:var(--ink);background:var(--paper);
+  background-image:
+    radial-gradient(circle at 12% 18%,#e3dfd4 1px,transparent 1.5px),
+    radial-gradient(circle at 70% 40%,#e3dfd4 1px,transparent 1.5px),
+    radial-gradient(circle at 38% 82%,#d8d4c8 1.2px,transparent 1.7px);
+  background-size:200px 200px,90px 90px,130px 130px;
+  line-height:1.6;
+}
+.deck{max-width:760px;margin:0 auto;padding:28px 20px 80px}
+.slide{
+  position:relative;background:rgba(255,255,255,.72);
+  border:1.5px solid var(--ink);border-radius:18px 14px 20px 16px;
+  outline:1px dashed rgba(74,74,85,.2);outline-offset:-7px;
+  padding:34px 30px 30px;margin-bottom:28px;
+  scroll-margin-top:24px;
+}
+.slide::before{
+  content:attr(data-n);
+  position:absolute;top:-16px;left:28px;
+  background:var(--butter);border:1.5px solid var(--ink);
+  border-radius:10px 8px 11px 7px;
+  font-size:13px;letter-spacing:.04em;padding:3px 12px;
+  font-variant-numeric:tabular-nums;
+}
+.slide h1{font-size:24px;font-weight:700;margin:6px 0 4px;text-wrap:balance}
+.slide .eyebrow{font-size:13px;color:var(--sub);margin:0 0 14px;letter-spacing:.02em}
+.slide .time{color:var(--sub);font-size:13px}
+.slide p{margin:0 0 12px;max-width:62ch}
+.slide ul{margin:0 0 12px;padding-left:20px}
+.slide li{margin-bottom:6px}
+.quote{
+  background:rgba(191,211,238,.3);border:1.5px solid var(--ink);
+  border-radius:12px 9px 13px 10px;padding:14px 16px;margin:0 0 16px;
+  font-size:15px;position:relative;
+}
+.quote::before{content:"“";position:absolute;left:10px;top:-2px;font-size:28px;color:var(--pink-deep);font-family:Georgia,serif}
+.quote p{margin:0;padding-left:18px}
+.verdict{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:14px;
+  border:1.5px solid var(--ink);border-radius:999px;padding:4px 14px;margin-bottom:14px}
+.verdict.intervene{background:var(--pink)}
+.verdict.accept{background:var(--green)}
+.evidence{font-size:13px;color:var(--sub);border-top:1px dashed rgba(74,74,85,.3);padding-top:10px;margin-top:4px}
+.evidence code{background:rgba(74,74,85,.08);padding:1px 5px;border-radius:5px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.cols{grid-template-columns:1fr}}
+.card{background:rgba(255,255,255,.6);border:1.5px solid var(--ink);border-radius:12px 9px 13px 10px;padding:14px 16px}
+.card h3{margin:0 0 6px;font-size:15px}
+.card.pink{background:rgba(246,201,214,.35)}
+.card.sky{background:rgba(191,211,238,.3)}
+.card.green{background:rgba(207,227,176,.35)}
+.todo{background:rgba(247,227,161,.45);border:1.5px dashed var(--ink);border-radius:12px;padding:14px 16px;font-size:14px}
+.cover{text-align:center;padding:54px 30px 44px}
+.cover .star{margin:0 auto 10px}
+.cover h1{font-size:34px;margin:4px 0 10px}
+.cover .def{max-width:56ch;margin:0 auto 18px;font-size:15.5px;color:var(--ink)}
+.cover .links{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--sub)}
+.cover .links a{color:var(--ink)}
+.toc{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px}
+.toc a{
+  font-size:12.5px;text-decoration:none;color:var(--ink);
+  border:1.2px solid var(--ink);border-radius:999px;padding:4px 11px;background:rgba(255,255,255,.6);
+}
+.toc a:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.appendix{background:rgba(255,253,248,.5)}
+.appendix h1{font-size:19px}
+.star-accent{position:absolute;opacity:.5}
+.deckfoot{text-align:center;color:var(--sub);font-size:12.5px;margin-top:8px}
+.navhint{position:fixed;right:18px;bottom:18px;background:var(--ink);color:var(--paper);
+  font-size:12px;padding:7px 12px;border-radius:999px;opacity:.78}
+@media print{
+  body{background:#fff}
+  .navhint,.toc{display:none}
+  .slide{break-inside:avoid;page-break-after:always;box-shadow:none}
+}
+@media (prefers-reduced-motion:no-preference){ html{scroll-behavior:smooth} }
+</style>
+
+<div class="deck">
+
+  <section class="slide cover" data-n="COVER">
+    <svg class="star" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+      <path d="M20 4 L24 15 L36 16 L27 24 L30 36 L20 29 L10 36 L13 24 L4 16 L16 15 Z"
+        fill="var(--butter)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/>
+    </svg>
+    <div class="eyebrow">바이브 코딩 개인 프로젝트 · 발표 7분 + 질의 3분</div>
+    <h1>Starmp — 과제를 쪼개서, 별을 하나씩 모아요</h1>
+    <p class="def">번아웃 온 대학생이, 마감 있는 과제 여러 개를 챙겨야 할 때, 과제를 3~5단계로 쪼개고
+      단계를 끝낼 때마다 별사탕이 병에 차오르는 화면으로 진행을 보며 다정한 코칭 문구를 받게 한다.
+      기존에는 유료화되는 일정 관리 앱은 핵심 기능이 잠기거나 부담스럽고, 무료 플래너는 목록과
+      숫자뿐이라 진행이 눈에 보이지 않아 열기 싫어졌다.</p>
+    <div class="links">
+      <span>munny <span style="color:var(--sub)">· GitHub: ansdudgus111</span></span>
+      <a href="https://ansdudgus111.github.io/vibe-coding-munny/" target="_blank" rel="noopener">ansdudgus111.github.io/vibe-coding-munny</a>
+      <a href="https://github.com/ansdudgus111/vibe-coding-munny" target="_blank" rel="noopener">github.com/ansdudgus111/vibe-coding-munny</a>
+    </div>
+    <nav class="toc" aria-label="슬라이드 바로가기">
+      <a href="#s2">2 데모</a><a href="#s3">3 베이스라인</a><a href="#s4">4 사례1</a>
+      <a href="#s5">5 사례2</a><a href="#s6">6 사례3</a><a href="#s7">7 결론</a><a href="#appendix">부록</a>
+    </nav>
+  </section>
+
+  <section class="slide" id="s2" data-n="SLIDE 2">
+    <div class="eyebrow">데모 <span class="time">· 1.5분</span></div>
+    <h1>단계 체크 → 병이 차오름 + 코칭, 이 하나가 핵심 기능</h1>
+    <p>화면은 3개뿐이다 — <strong>목록</strong>(등록 + 돌아보기) → <strong>병</strong>(단계 체크 + 코칭 + 알림)
+      → <strong>완료</strong>(회고). 이 순서대로 실제 배포 페이지를 열어 시연한다.</p>
+    <div class="todo">📸 <strong>확인 필요</strong> — 아래 3장을 실제 데모 중 캡처해 이 자리에 넣을 것:
+      ① 목록 화면(등록 폼 + 담고 있는 병 목록 + 돌아보기) ② 병 화면(별사탕 병 + 알림 미리보기 모달)
+      ③ 완료 화면(가득 찬 병 + 회고 입력)</div>
+  </section>
+
+  <section class="slide" id="s3" data-n="SLIDE 3">
+    <div class="eyebrow">나이브 베이스라인 <span class="time">· 1분</span></div>
+    <h1>같은 한 줄을 세 번 던져봤고, 세 번 다 같은 패턴이 나왔다</h1>
+    <div class="quote"><p>나는 내가 해야되는 일을 시각적으로 보여주고 목표를 설정하면 팝업으로 지속적으로
+      알려주는 걸 만들고 싶거든 내가 이번학기 번아웃이 와서 스크린 타임은 느는데 할 일은 똑바로
+      안 됐거든 그래서 그런걸 좀 힐링하고 고치기 위해서 가시적으로 할일을 할 수 있도록 도와주고
+      힐링할 수 있는 앱을 만들고 싶었어</p></div>
+    <p>Claude Code로 같은 문장을 두 번 재현하려 했지만, 두 번 다 "오염 의심"으로 무효 처리했다
+      — 이미 CLAUDE.md를 읽은 세션/서브에이전트였기 때문이다 (상세: 슬라이드 4). 대신 과제 예시
+      프롬프트("대학생용 투두리스트 앱 만들어줘")로 진행한 시도에서 AI가 임의로 정한 것:</p>
+    <ul>
+      <li>투두 항목에 카테고리(학업/개인/동아리)·우선순위(낮음/보통/높음)를 요청 없이 추가</li>
+      <li>"어떻게 해야 잊지 않고 완료할지 <strong>방법을 생각해봐</strong>"(브레인스토밍 요청)에
+        설명 없이 바로 알림·스트릭·등급 뱃지 시스템을 <strong>구현</strong>해버림 — 질문과 구현을
+        구분하지 못함</li>
+      <li>"힐링 컨셉"이라는 추상적 지시를 톤으로 해석하지 않고 "힐링"이라는 단어 자체를 제목에
+        그대로 박아넣음 (키워드 치환 ≠ 개념 번역)</li>
+    </ul>
+    <p class="evidence">전체 기록: <code>phase0/LOG.md</code></p>
+  </section>
+
+  <section class="slide" id="s4" data-n="SLIDE 4">
+    <div class="eyebrow">의사결정 사례 1</div>
+    <span class="verdict intervene">● 개입함</span>
+    <h1>서브에이전트가 "무시하라"는 지시에도 프로젝트 규칙을 상속했다</h1>
+    <div class="quote"><p>나는 내가 해야되는 일을 시각적으로 보여주고 ... 힐링할 수 있는 앱을
+      만들고 싶었어 <span style="color:var(--sub)">(서브에이전트에게 "CLAUDE.md는 없다, 무시하라"는
+      지시와 함께 전달)</span></p></div>
+    <div class="cols">
+      <div class="card pink"><h3>전</h3><p style="margin:0">"격리된 나이브 베이스라인"이라고
+        믿을 뻔함 — 서브에이전트는 "CLAUDE.md를 참고하지 않았다"고 스스로 보고함</p></div>
+      <div class="card green"><h3>후</h3><p style="margin:0">산출물을 CLAUDE.md 원문과 직접
+        대조해 <code>{next}</code>/<code>{today}</code> 플레이스홀더, 5분 알림 억제 규칙과
+        수치까지 그대로 나타난 것을 확인 → 무효 처리</p></div>
+    </div>
+    <p class="evidence">AI의 자체 보고를 믿지 않고 코드를 직접 대조 검증했다. 증거: 커밋
+      <code>1d960d1</code> · <code>phase0/LOG.md</code></p>
+  </section>
+
+  <section class="slide" id="s5" data-n="SLIDE 5">
+    <div class="eyebrow">의사결정 사례 2 <span style="color:var(--sub)">· 최소 1건 필수</span></div>
+    <span class="verdict accept">● 개입하지 않음 (받아들임)</span>
+    <h1>화면 3개 제약 안에서 새 화면 대신 토글을 쓰자는 제안을 수락</h1>
+    <div class="quote"><p>네가 이 프로젝트의 교수라고 생각하고 ... 어떤식으로 해결할 수 있을지
+      고민해봐 → 그렇게 수정해줘</p></div>
+    <div class="cols">
+      <div class="card pink"><h3>전</h3><p style="margin:0">주간/월간 기록을 보여주려면 새 화면이
+        필요해 보였고, 그러면 화면이 4개가 되어 하드 제약 위반 위험</p></div>
+      <div class="card green"><h3>후</h3><p style="margin:0">AI가 스스로 제약을 점검하고
+        목록 화면 맨 아래 토글 패널 대안을 제시 → 화면 3개 그대로 유지</p></div>
+    </div>
+    <p class="evidence">더 나은 대안이 떠오르지 않았고, AI가 하드 제약을 스스로 점검한 뒤 낸
+      대안이라 승인. 증거: 배포 사이트의 실제 섹션 수 3개, 커밋 <code>863d877</code></p>
+  </section>
+
+  <section class="slide" id="s6" data-n="SLIDE 6">
+    <div class="eyebrow">의사결정 사례 3</div>
+    <span class="verdict intervene">● 개입함</span>
+    <h1>"화면 전체를 도는 별" 요청이 예전에 되돌렸던 패턴과 같다는 걸 짚음</h1>
+    <div class="quote"><p>채점기준 때문에 플로팅 윈도우 앱으로 구현할 수 없으니까 웹 안에서 알림설정
+      시간 단위를 분이랑 초 단위로도 설정할 수 있게 하고 플로팅 위젯 형태로 별사탕이 화면에서
+      랜덤하게 또르르 굴러가면서 '이런 과제가 기다리고 있어요 조금씩 시작해볼까요?' 하는 알림이
+      나오도록 해줘</p></div>
+    <div class="cols">
+      <div class="card pink"><h3>전</h3><p style="margin:0">요청: 화면 전체를 굴러다니는 별 +
+        초 단위 알림 + 전용 데모 화면</p></div>
+      <div class="card green"><h3>후</h3><p style="margin:0">병 화면 안 모달로 범위를 좁혀 구현
+        (별사탕이 굴러들어오며 쪽지가 열리는 연출은 유지, 화면 수는 그대로 3개)</p></div>
+    </div>
+    <p class="evidence">"화면 전체에 떠다니는 별 금지"는 과거 파티클 오해 사례로 생긴 규칙이라,
+      시키는 대로 만들면 이전 판단을 스스로 뒤집는 셈이었다. 증거: 커밋 <code>6fcff57</code></p>
+  </section>
+
+  <section class="slide" id="s7" data-n="SLIDE 7">
+    <div class="eyebrow">결론 <span class="time">· 0.5분</span></div>
+    <h1>AI는 과거 맥락을 스스로 의심하지 않는다</h1>
+    <div class="cols" style="margin-bottom:14px">
+      <div class="card sky"><h3>AI가 믿을 만했던 영역</h3>
+        <p style="margin:0">기존 디자인 토큰 재사용, 하드 제약을 스스로 점검하고 대안을 내는 것</p></div>
+      <div class="card pink"><h3>사람 개입이 꼭 필요했던 영역</h3>
+        <p style="margin:0">"됐다"는 자체 보고의 코드 대조 검증, 과거에 되돌린 패턴이 다른 말로
+        재등장했을 때 알아채는 것</p></div>
+    </div>
+    <p><strong>다음 프로젝트 개선점</strong> — Phase 0처럼 "AI가 아무것도 모르는 상태"가 필요한
+      작업은 같은 세션의 서브에이전트나 작업 폴더 분리로 흉내 낼 수 없다. 처음부터 완전히 분리된
+      새 프로세스(새 터미널/새 창)로 시작해야 한다.</p>
+  </section>
+
+  <section class="slide appendix" id="appendix" data-n="APPENDIX">
+    <div class="eyebrow">부록 — 발표하지 않지만 제출에 포함</div>
+    <h1>증거 모음</h1>
+    <ul>
+      <li>전체 의사결정 기록(8건): <code>REFLECTION.md</code></li>
+      <li>claude.ai 원본 대화 인수인계: <code>CONTEXT.md</code></li>
+      <li>Phase 0 전체 시도 기록: <code>phase0/LOG.md</code></li>
+      <li>프로젝트 규칙 원문: <code>CLAUDE.md</code></li>
+      <li>주요 커밋 — <code>863d877</code> 초기 스냅샷 · <code>1d960d1</code> Phase 0 오염 발견 ·
+        <code>4c71254</code> 성찰기 초안 · <code>6fcff57</code> 알림 기능+제약 조율 ·
+        <code>f35292f</code> 로고 홈 이동 · <code>3ffac2a</code> 스와이프 삭제/수정</li>
+    </ul>
+  </section>
+
+  <p class="deckfoot">Starmp · 발표 자료 — 내용 원본은 PRESENTATION.md</p>
+</div>
+
+<div class="navhint">↑↓ 또는 스크롤로 이동 · 인쇄(Ctrl/Cmd+P)로 PDF 저장</div>
+
+<script>
+(function(){
+  var slides=[...document.querySelectorAll('.slide')];
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='ArrowDown'&&e.key!=='ArrowUp'&&e.key!=='PageDown'&&e.key!=='PageUp')return;
+    e.preventDefault();
+    var y=window.scrollY+10;
+    var idx=slides.findIndex(function(s){return s.offsetTop>y});
+    if(e.key==='ArrowUp'||e.key==='PageUp'){
+      idx=slides.map(function(s){return s.offsetTop}).lastIndexOf(
+        slides.map(function(s){return s.offsetTop}).filter(function(t){return t<y-20}).pop()
+      );
+      if(idx<0)idx=0;
+    } else if(idx<0)idx=slides.length-1;
+    slides[idx].scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+  });
+})();
+</script>
