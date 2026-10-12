@@ -35,7 +35,15 @@ label{font-size:14px;display:block;margin:8px 0 4px}
 .btn:disabled{opacity:.55;cursor:wait}
 .btn:active{transform:translateY(1px)}
 .row{display:flex;gap:8px;align-items:center;justify-content:space-between}
-.item{display:flex;gap:10px;align-items:center;cursor:pointer;padding:12px;border:1.5px solid var(--ink);border-radius:13px 11px 14px 10px;background:rgba(255,255,255,.75);margin-bottom:12px;width:100%;font:inherit;color:inherit;text-align:left}
+.item{display:flex;gap:10px;align-items:center;cursor:pointer;padding:12px;border:1.5px solid var(--ink);border-radius:13px 11px 14px 10px;background:rgba(255,255,255,.75);width:100%;font:inherit;color:inherit;text-align:left}
+.swipeRow{position:relative;overflow:hidden;border-radius:13px 11px 14px 10px;margin-bottom:12px}
+.swipeActions{position:absolute;inset:0;display:flex;justify-content:flex-end}
+.swAct{font:inherit;font-size:14px;color:var(--ink);border:1.5px solid var(--ink);border-left:0;padding:0 18px;cursor:pointer;flex:none}
+.swAct.edit{background:var(--sky)}
+.swAct.del{background:var(--pink);border-radius:0 13px 14px 0}
+.swipeFront{display:flex;gap:6px;position:relative;z-index:1;background:var(--paper);transition:transform .2s ease;touch-action:pan-y}
+.more{font:inherit;font-size:18px;line-height:1;color:var(--sub);background:rgba(255,255,255,.75);border:1.5px solid var(--ink);border-radius:11px;padding:0 10px;cursor:pointer;flex:none}
+@media (prefers-reduced-motion:reduce){.swipeFront{transition:none}}
 .item small{color:var(--sub);display:block}
 .mini{display:flex;gap:2px;flex-wrap:wrap;max-width:70px;justify-content:flex-end}
 .dd{font-size:13px;color:var(--sub);white-space:nowrap}
@@ -562,17 +570,80 @@ function miniStars(t){
   return t.steps.map((s,i)=>`<svg width="16" height="16" viewBox="0 0 16 16"><path d="${roundStar(8,8,7)}" fill="${i<k?pf[i%5]:"none"}" stroke="${i<k?INK:"#b9b5ab"}" stroke-width="1" ${i<k?"":'stroke-dasharray="2 2"'}/></svg>`).join("");
 }
 function pctOf(t){return Math.round(t.steps.filter(x=>x.done).length/t.steps.length*100)}
+const SWIPE_W=132;
 function renderList(){
   const act=state.tasks.filter(t=>!t.completedAt).sort((a,b)=>a.due.localeCompare(b.due));
   let h="";
   if(!act.length)h=state.tasks.length
     ?`<div class="empty">지금 담고 있는 병이 없어요.<br>가득 채운 병은 아래 '돌아보기'에서 볼 수 있어요.</div>`
     :`<div class="empty">아직 빈 병이 없어요.<br>아래에서 첫 과제를 담아봐요.</div>`;
-  h+=act.map(t=>`<button class="item" data-id="${t.id}"><div style="flex:1"><div><span class="dot" style="background:${swatchBg(t.color)}"></span>${esc(t.title)}</div><small>${ddText(dDiff(t.due))} · ${pctOf(t)}%</small></div><div class="mini">${miniStars(t)}</div></button>`).join("");
+  h+=act.map(t=>`<div class="swipeRow" data-row="${t.id}">
+    <div class="swipeActions" aria-hidden="true">
+      <button class="swAct edit" data-act="edit" data-id="${t.id}" tabindex="-1">수정</button>
+      <button class="swAct del" data-act="del" data-id="${t.id}" tabindex="-1">삭제</button>
+    </div>
+    <div class="swipeFront" data-front="${t.id}">
+      <button class="item" data-id="${t.id}"><div style="flex:1"><div><span class="dot" style="background:${swatchBg(t.color)}"></span>${esc(t.title)}</div><small>${ddText(dDiff(t.due))} · ${pctOf(t)}%</small></div><div class="mini">${miniStars(t)}</div></button>
+      <button class="more" data-id="${t.id}" aria-label="${esc(t.title)} 더 보기" aria-expanded="false">⋮</button>
+    </div>
+  </div>`).join("");
   $("#list").innerHTML=h;
-  document.querySelectorAll(".item").forEach(b=>b.onclick=()=>openTask(b.dataset.id));
+  document.querySelectorAll(".swipeRow .item").forEach(b=>b.onclick=()=>{
+    const row=b.closest(".swipeRow");
+    if(row.classList.contains("open")){closeSwipe(row);return}
+    openTask(b.dataset.id);
+  });
+  document.querySelectorAll(".more").forEach(b=>b.onclick=e=>{e.stopPropagation();toggleSwipe(b.closest(".swipeRow"))});
+  document.querySelectorAll('[data-act="edit"]').forEach(b=>b.onclick=()=>openTask(b.dataset.id));
+  document.querySelectorAll('[data-act="del"]').forEach(b=>b.onclick=()=>{
+    const t=state.tasks.find(x=>x.id===b.dataset.id);
+    if(t&&confirm(`'${t.title}' 과제를 지울까요?`)){state.tasks=state.tasks.filter(x=>x!==t);save();renderList()}
+  });
+  wireSwipe();
   renderReview();
 }
+function toggleSwipe(row,open){
+  document.querySelectorAll(".swipeRow.open").forEach(r=>{if(r!==row)closeSwipe(r)});
+  const willOpen=open!==undefined?open:!row.classList.contains("open");
+  const front=row.querySelector(".swipeFront");
+  row.classList.toggle("open",willOpen);
+  front.style.transform=willOpen?`translateX(-${SWIPE_W}px)`:"translateX(0)";
+  row.querySelector(".more").setAttribute("aria-expanded",String(willOpen));
+  row.querySelector(".swipeActions").setAttribute("aria-hidden",String(!willOpen));
+  row.querySelectorAll(".swAct").forEach(b=>b.tabIndex=willOpen?0:-1);
+  if(willOpen)row.querySelector(".swAct.edit").focus();
+}
+function closeSwipe(row){toggleSwipe(row,false)}
+function wireSwipe(){
+  document.querySelectorAll(".swipeFront").forEach(front=>{
+    let sx=0,dx=0,dragging=false,startOpen=false;
+    front.addEventListener("pointerdown",e=>{
+      if(e.target.closest(".more"))return;
+      dragging=true;sx=e.clientX;dx=0;startOpen=front.closest(".swipeRow").classList.contains("open");
+      front.style.transition="none";
+      try{front.setPointerCapture(e.pointerId)}catch(err){}
+    });
+    front.addEventListener("pointermove",e=>{
+      if(!dragging)return;
+      dx=e.clientX-sx;
+      const base=startOpen?-SWIPE_W:0;
+      const x=Math.min(0,Math.max(-SWIPE_W,base+dx));
+      front.style.transform=`translateX(${x}px)`;
+    });
+    const end=()=>{
+      if(!dragging)return;dragging=false;
+      front.style.transition="";
+      const base=startOpen?-SWIPE_W:0;
+      const finalX=Math.min(0,Math.max(-SWIPE_W,base+dx));
+      toggleSwipe(front.closest(".swipeRow"),finalX<=-SWIPE_W/2);
+    };
+    front.addEventListener("pointerup",end);
+    front.addEventListener("pointercancel",end);
+  });
+}
+document.addEventListener("click",e=>{
+  if(!e.target.closest(".swipeRow"))document.querySelectorAll(".swipeRow.open").forEach(closeSwipe);
+});
 /* ---- 돌아보기: 주간/월간 (목록 화면 안의 패널) ---- */
 const rv={mode:"week",off:0,sel:null};
 const toDS=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
