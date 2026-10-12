@@ -26,7 +26,9 @@ h1.brand{cursor:pointer}
 .panel.sky{background:rgba(191,211,238,.35)}
 .panel.green{background:rgba(207,227,176,.4)}
 input,textarea,select{width:100%;font:inherit;color:var(--ink);padding:10px 12px;border:1.5px solid var(--ink);border-radius:10px 12px 9px 11px;background:#fffefb;margin-bottom:8px}
-input[type="date"],input[type="time"]{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;font-size:11px;padding-left:4px;padding-right:4px;min-width:0;max-width:100%}
+input[type="date"],input[type="time"]{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+.dateBox{border:1.5px solid var(--ink);border-radius:10px 12px 9px 11px;background:#fffefb;margin-bottom:8px;overflow:hidden}
+.dateBox input[type="date"]{display:block;width:100%;box-sizing:border-box;border:0;margin:0;border-radius:0;background:transparent;padding:10px 8px;font-size:15px}
 input:focus,textarea:focus,select:focus,button:focus-visible,summary:focus-visible,#homeBtn:focus-visible{outline:3px solid var(--sky);outline-offset:1px}
 label{font-size:14px;display:block;margin:8px 0 4px}
 .ptitle{margin-bottom:4px}
@@ -175,7 +177,7 @@ label{font-size:14px;display:block;margin:8px 0 4px}
       <label for="fTitle">과제 이름</label>
       <input id="fTitle" placeholder="예) 경제학 기말 리포트" maxlength="40">
       <label for="fDue">마감일</label>
-      <input id="fDue" type="date">
+      <div class="dateBox"><input id="fDue" type="date"></div>
       <label>할 일 단계 (3~5개)</label>
       <div class="chips" id="tpl" role="group" aria-label="과제 유형으로 단계 초안 채우기"></div>
       <p class="hint l" id="tplHint">유형을 누르면 단계 초안이 채워져요. 직접 적어도 돼요.</p>
